@@ -43,14 +43,18 @@ def analyze(request: AnalyzeRequest) -> AnalyzeResponse:
 
 def run_analysis(request: AnalyzeRequest) -> AnalyzeResponse:
     settings = get_settings()
+    gemini_api_key = request.gemini_api_key or settings.gemini_api_key
+    youtube_api_key = request.youtube_api_key or settings.youtube_api_key
     try:
-        settings.require_gemini_key()
-        settings.require_youtube_key()
+        if not gemini_api_key:
+            raise RuntimeError("Missing Gemini API key. Add one in Settings.")
+        if not youtube_api_key:
+            raise RuntimeError("Missing YouTube API key. Add one in Settings.")
     except RuntimeError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
-    youtube = YouTubeClient(settings.youtube_api_key)
-    gemini = GeminiClient(settings.gemini_api_key, settings.gemini_model, timeout_sec=180)
+    youtube = YouTubeClient(youtube_api_key)
+    gemini = GeminiClient(gemini_api_key, settings.gemini_model, timeout_sec=180)
 
     try:
         video_id = youtube.parse_video_id(str(request.youtube_url))

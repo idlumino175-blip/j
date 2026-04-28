@@ -6,6 +6,8 @@ class AnalyzeRequest(BaseModel):
     max_clips: int = Field(default=10, ge=1, le=25)
     min_duration_sec: int = Field(default=20, ge=5, le=180)
     max_duration_sec: int = Field(default=75, ge=10, le=300)
+    gemini_api_key: str | None = Field(default=None, min_length=1)
+    youtube_api_key: str | None = Field(default=None, min_length=1)
 
     @field_validator("max_duration_sec")
     @classmethod

@@ -6,6 +6,9 @@ const clipList = document.querySelector("#clipList");
 const renderOutput = document.querySelector("#renderOutput");
 const renderTop5 = document.querySelector("#renderTop5");
 const renderNext5 = document.querySelector("#renderNext5");
+const geminiApiKey = document.querySelector("#geminiApiKey");
+const youtubeApiKey = document.querySelector("#youtubeApiKey");
+const saveKeys = document.querySelector("#saveKeys");
 
 let lastRequest = null;
 let lastAnalysis = null;
@@ -20,6 +23,9 @@ form.addEventListener("submit", async (event) => {
 
 renderTop5.addEventListener("click", () => renderBatch(1, 5));
 renderNext5.addEventListener("click", () => renderBatch(6, 5));
+saveKeys.addEventListener("click", saveApiKeys);
+
+loadApiKeys();
 
 const savedJobId = localStorage.getItem("activeRenderJobId");
 if (savedJobId) {
@@ -31,12 +37,28 @@ if (savedJobId) {
 }
 
 function readRequest() {
-  return {
+  const request = {
     youtube_url: document.querySelector("#youtubeUrl").value.trim(),
     max_clips: Number(document.querySelector("#maxClips").value),
     min_duration_sec: Number(document.querySelector("#minDuration").value),
     max_duration_sec: Number(document.querySelector("#maxDuration").value),
   };
+  const geminiKey = geminiApiKey.value.trim();
+  const youtubeKey = youtubeApiKey.value.trim();
+  if (geminiKey) request.gemini_api_key = geminiKey;
+  if (youtubeKey) request.youtube_api_key = youtubeKey;
+  return request;
+}
+
+function loadApiKeys() {
+  geminiApiKey.value = localStorage.getItem("geminiApiKey") || "";
+  youtubeApiKey.value = localStorage.getItem("youtubeApiKey") || "";
+}
+
+function saveApiKeys() {
+  localStorage.setItem("geminiApiKey", geminiApiKey.value.trim());
+  localStorage.setItem("youtubeApiKey", youtubeApiKey.value.trim());
+  setStatus("Keys saved", "");
 }
 
 async function analyzeAndRender(payload) {

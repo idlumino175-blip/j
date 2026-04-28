@@ -55,6 +55,22 @@
         </section>
 
         <section class="panel compact">
+          <div class="panel-title">Keys</div>
+          <div class="form">
+            <label class="field">
+              <span>Gemini API key</span>
+              <input id="geminiApiKey" type="password" placeholder="Use your own Gemini key" autocomplete="off" />
+            </label>
+            <label class="field">
+              <span>YouTube API key</span>
+              <input id="youtubeApiKey" type="password" placeholder="Use your own YouTube v3 key" autocomplete="off" />
+            </label>
+            <button id="saveKeys" class="secondary" type="button">Save keys</button>
+          </div>
+          <p class="hint">Stored only in this browser. Model stays fixed.</p>
+        </section>
+
+        <section class="panel compact">
           <div class="panel-title">Render</div>
           <div class="render-actions">
             <button id="renderTop5" class="secondary" type="button" disabled>Top 5</button>

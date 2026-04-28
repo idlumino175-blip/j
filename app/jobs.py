@@ -74,8 +74,11 @@ class RenderJobStore:
                 max_clips=max(request.max_clips + request.start_rank - 1, request.max_clips),
                 min_duration_sec=request.min_duration_sec,
                 max_duration_sec=request.max_duration_sec,
+                gemini_api_key=request.gemini_api_key,
+                youtube_api_key=request.youtube_api_key,
                 start_rank=request.start_rank,
                 speed=request.speed,
+                target_rank=request.target_rank,
             )
             analysis = runner(analysis_request)
             if request.target_rank is not None:
