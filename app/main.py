@@ -1,9 +1,10 @@
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+from app.auth import CurrentUser, get_current_user, public_app_config, require_render_credit
 from app.config import get_settings
 from app.gemini_client import GeminiClient, GeminiError
 from app.jobs import render_jobs
@@ -34,6 +35,11 @@ def index() -> FileResponse:
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/app-config")
+def app_config() -> dict[str, object]:
+    return public_app_config()
 
 
 @app.post("/analyze", response_model=AnalyzeResponse)
@@ -79,7 +85,8 @@ def run_analysis(request: AnalyzeRequest) -> AnalyzeResponse:
 
 
 @app.post("/render")
-def render(request: RenderRequest) -> dict[str, object]:
+def render(request: RenderRequest, user: CurrentUser | None = Depends(get_current_user)) -> dict[str, object]:
+    require_render_credit(user)
     job = render_jobs.create(request, run_analysis)
     return job.to_dict()
 

@@ -9,11 +9,24 @@ const renderNext5 = document.querySelector("#renderNext5");
 const geminiApiKey = document.querySelector("#geminiApiKey");
 const youtubeApiKey = document.querySelector("#youtubeApiKey");
 const saveKeys = document.querySelector("#saveKeys");
+const authPanel = document.querySelector("#authPanel");
+const signedOutAuth = document.querySelector("#signedOutAuth");
+const signedInAuth = document.querySelector("#signedInAuth");
+const authEmail = document.querySelector("#authEmail");
+const authUserEmail = document.querySelector("#authUserEmail");
+const dailyLimitText = document.querySelector("#dailyLimitText");
+const sendMagicLink = document.querySelector("#sendMagicLink");
+const signOut = document.querySelector("#signOut");
+const advancedToggle = document.querySelector("#advancedToggle");
+const advancedSettings = document.querySelector("#advancedSettings");
 
 let lastRequest = null;
 let lastAnalysis = null;
 let activeJobTimer = null;
 let analysisTimer = null;
+let appConfig = { auth_required: false };
+let supabaseClient = null;
+let authSession = null;
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -24,8 +37,12 @@ form.addEventListener("submit", async (event) => {
 renderTop5.addEventListener("click", () => renderBatch(1, 5));
 renderNext5.addEventListener("click", () => renderBatch(6, 5));
 saveKeys.addEventListener("click", saveApiKeys);
+sendMagicLink.addEventListener("click", sendSignInLink);
+signOut.addEventListener("click", signOutUser);
+advancedToggle.addEventListener("click", () => advancedSettings.classList.toggle("hidden"));
 
 loadApiKeys();
+initApp();
 
 const savedJobId = localStorage.getItem("activeRenderJobId");
 if (savedJobId) {
@@ -43,11 +60,70 @@ function readRequest() {
     min_duration_sec: Number(document.querySelector("#minDuration").value),
     max_duration_sec: Number(document.querySelector("#maxDuration").value),
   };
-  const geminiKey = geminiApiKey.value.trim();
-  const youtubeKey = youtubeApiKey.value.trim();
-  if (geminiKey) request.gemini_api_key = geminiKey;
-  if (youtubeKey) request.youtube_api_key = youtubeKey;
+  if (!advancedSettings.classList.contains("hidden")) {
+    const geminiKey = geminiApiKey.value.trim();
+    const youtubeKey = youtubeApiKey.value.trim();
+    if (geminiKey) request.gemini_api_key = geminiKey;
+    if (youtubeKey) request.youtube_api_key = youtubeKey;
+  }
   return request;
+}
+
+async function initApp() {
+  try {
+    appConfig = await fetch("/app-config").then((response) => response.json());
+    dailyLimitText.textContent = `${appConfig.daily_free_renders || 3} free renders per day.`;
+    if (appConfig.auth_required) {
+      authPanel.classList.remove("hidden");
+      supabaseClient = window.supabase.createClient(appConfig.supabase_url, appConfig.supabase_anon_key);
+      const { data } = await supabaseClient.auth.getSession();
+      authSession = data.session;
+      renderAuthState();
+      supabaseClient.auth.onAuthStateChange((_event, session) => {
+        authSession = session;
+        renderAuthState();
+      });
+    }
+  } catch (error) {
+    setStatus("Config error", "error");
+  }
+}
+
+function renderAuthState() {
+  const user = authSession?.user;
+  if (user) {
+    signedOutAuth.classList.add("hidden");
+    signedInAuth.classList.remove("hidden");
+    authUserEmail.textContent = user.email || "Signed in";
+  } else {
+    signedOutAuth.classList.remove("hidden");
+    signedInAuth.classList.add("hidden");
+    authUserEmail.textContent = "";
+  }
+}
+
+async function sendSignInLink() {
+  const email = authEmail.value.trim();
+  if (!email || !supabaseClient) return;
+  setStatus("Sending link", "busy");
+  const { error } = await supabaseClient.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: window.location.origin },
+  });
+  if (error) {
+    setStatus("Sign-in error", "error");
+    showError(error.message);
+    return;
+  }
+  setStatus("Check email", "");
+}
+
+async function signOutUser() {
+  if (!supabaseClient) return;
+  await supabaseClient.auth.signOut();
+  authSession = null;
+  renderAuthState();
+  setStatus("Signed out", "");
 }
 
 function loadApiKeys() {
@@ -62,6 +138,11 @@ function saveApiKeys() {
 }
 
 async function analyzeAndRender(payload) {
+  if (appConfig.auth_required && !authSession) {
+    setStatus("Sign in needed", "error");
+    showError("Please sign in before rendering clips.");
+    return;
+  }
   setStatus("Starting", "busy");
   emptyState.classList.add("hidden");
   renderOutput.classList.add("hidden");
@@ -97,6 +178,11 @@ async function renderSingle(rank) {
 
 async function startRenderJob({ startRank, maxClips, targetRank = null }) {
   if (!lastRequest) return;
+  if (appConfig.auth_required && !authSession) {
+    setStatus("Sign in needed", "error");
+    showError("Please sign in before rendering clips.");
+    return;
+  }
   setStatus("Starting render", "busy");
   renderOutput.classList.remove("hidden");
   renderOutput.innerHTML = renderJobShell("Creating job", 0, maxClips);
@@ -118,9 +204,13 @@ async function startRenderJob({ startRank, maxClips, targetRank = null }) {
 }
 
 async function postJson(url, payload) {
+  const headers = { "Content-Type": "application/json" };
+  if (authSession?.access_token) {
+    headers.Authorization = `Bearer ${authSession.access_token}`;
+  }
   const response = await fetch(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify(payload),
   });
   const data = await response.json();

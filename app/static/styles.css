@@ -160,6 +160,24 @@ input {
   border-color: var(--line);
 }
 
+.plain-toggle {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: #151412;
+  color: var(--accent);
+  border-radius: 7px;
+  min-height: 38px;
+  cursor: pointer;
+  font-weight: 760;
+}
+
+.auth-email {
+  color: var(--text);
+  font-weight: 760;
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+}
+
 .secondary:disabled,
 .primary:disabled {
   opacity: 0.48;

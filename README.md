@@ -19,9 +19,17 @@ GEMINI_MODEL=gemini-3-flash-preview
 YOUTUBE_API_KEY=...
 YTDLP_COOKIES_FILE=
 YTDLP_COOKIES_CONTENT=
+SUPABASE_URL=
+SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+DAILY_FREE_RENDERS=3
 ```
 
 Use `YTDLP_COOKIES_FILE` locally when you have a cookie file path. On Vercel, use `YTDLP_COOKIES_CONTENT` and paste the Netscape cookie text as the secret value.
+
+Supabase is optional for local development. When `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` are set, the app requires sign-in before rendering and limits each user by `DAILY_FREE_RENDERS`.
+
+Run `supabase_schema.sql` in the Supabase SQL editor to create the usage table.
 
 ## Run
 

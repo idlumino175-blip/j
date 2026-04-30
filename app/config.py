@@ -13,6 +13,10 @@ class Settings(BaseSettings):
     youtube_api_key: str = ""
     ytdlp_cookies_file: str = ""
     ytdlp_cookies_content: str = ""
+    supabase_url: str = ""
+    supabase_anon_key: str = ""
+    supabase_service_role_key: str = ""
+    daily_free_renders: int = 3
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 

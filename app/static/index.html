@@ -17,6 +17,26 @@
           </div>
         </div>
 
+        <section id="authPanel" class="panel hidden">
+          <div class="panel-title">Account</div>
+          <div id="signedOutAuth" class="form">
+            <label class="field">
+              <span>Email</span>
+              <input id="authEmail" type="email" placeholder="you@example.com" autocomplete="email" />
+            </label>
+            <button id="sendMagicLink" class="secondary" type="button">Send sign-in link</button>
+            <p class="hint">Sign in to use daily free renders.</p>
+          </div>
+          <div id="signedInAuth" class="form hidden">
+            <div>
+              <div class="metric-label">Signed in</div>
+              <div id="authUserEmail" class="auth-email"></div>
+            </div>
+            <button id="signOut" class="secondary" type="button">Sign out</button>
+            <p id="dailyLimitText" class="hint"></p>
+          </div>
+        </section>
+
         <section class="panel">
           <div class="panel-title">Analyze</div>
           <form id="analyzeForm" class="form">
@@ -55,8 +75,9 @@
         </section>
 
         <section class="panel compact">
-          <div class="panel-title">Keys</div>
-          <div class="form">
+          <button id="advancedToggle" class="plain-toggle" type="button">Advanced settings</button>
+          <div id="advancedSettings" class="form hidden">
+            <p class="hint">Optional developer override. Normal users do not need this.</p>
             <label class="field">
               <span>Gemini API key</span>
               <input id="geminiApiKey" type="password" placeholder="Use your own Gemini key" autocomplete="off" />
@@ -67,7 +88,6 @@
             </label>
             <button id="saveKeys" class="secondary" type="button">Save keys</button>
           </div>
-          <p class="hint">Stored only in this browser. Model stays fixed.</p>
         </section>
 
         <section class="panel compact">
@@ -103,6 +123,7 @@
       </section>
     </main>
 
-    <script src="/static/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/static/app.js?v=auth1"></script>
   </body>
 </html>
