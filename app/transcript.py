@@ -77,7 +77,10 @@ def fetch_transcript_with_ytdlp(video_id: str, original_error: Exception) -> lis
 def choose_subtitle_url(info: dict) -> str | None:
     for bucket_name in ("subtitles", "automatic_captions"):
         bucket = info.get(bucket_name) or {}
-        for language in ("en", "en-US", "en-GB"):
+        language_order = ["en", "en-orig", "en-US", "en-GB"]
+        language_order.extend(language for language in bucket if language.startswith("en-"))
+        language_order.extend(language for language in bucket if language not in language_order)
+        for language in language_order:
             entries = bucket.get(language) or []
             vtt_entry = next((entry for entry in entries if entry.get("ext") == "vtt"), None)
             if vtt_entry and vtt_entry.get("url"):
