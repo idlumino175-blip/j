@@ -1,5 +1,6 @@
 from functools import lru_cache
 import hashlib
+import os
 import tempfile
 from pathlib import Path
 
@@ -31,10 +32,18 @@ def get_settings() -> Settings:
 
 def get_ytdlp_cookies_file() -> str:
     settings = get_settings()
-    if settings.ytdlp_cookies_file:
+    cookies_content_file = write_ytdlp_cookies_content(settings.ytdlp_cookies_content)
+    if os.getenv("VERCEL") and cookies_content_file:
+        return cookies_content_file
+
+    if settings.ytdlp_cookies_file and Path(settings.ytdlp_cookies_file).exists():
         return settings.ytdlp_cookies_file
 
-    cookies_content = settings.ytdlp_cookies_content.strip()
+    return cookies_content_file
+
+
+def write_ytdlp_cookies_content(cookies_content: str) -> str:
+    cookies_content = cookies_content.strip()
     if not cookies_content:
         return ""
 
