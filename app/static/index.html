@@ -3,127 +3,82 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Viral Clip Finder</title>
-    <link rel="stylesheet" href="/static/styles.css" />
+    <title>Viral Clip Finder • Editorial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css?v=editorial_v2" />
   </head>
   <body>
-    <main class="shell">
-      <aside class="sidebar">
-        <div class="brand">
-          <div class="brand-mark">VC</div>
-          <div>
-            <div class="brand-name">Viral Clip Finder</div>
-            <div class="brand-subtitle">Transcript + comment intelligence</div>
+    <header class="magazine-nav">
+      <div class="nav-content">
+        <div class="brand">VC • Magazine</div>
+        <div class="issue-tag">Vol 01 / No. 24</div>
+        <div id="statusPill" class="status-dot">Ready</div>
+      </div>
+    </header>
+
+    <main class="magazine-feed">
+      <section class="hero">
+        <div class="eyebrow">Content Intelligence</div>
+        <h1>The Engaging <br>Moment.</h1>
+        <p class="sub-lead">Automatically identify and render the most compelling narratives from long-form video content.</p>
+        
+        <form id="analyzeForm" class="input-hero">
+          <input id="youtubeUrl" type="url" placeholder="Paste YouTube link here..." required />
+          <button type="submit" class="pill-btn">Find Clips</button>
+        </form>
+
+        <div class="advanced-meta">
+          <div class="setting-pill">
+            <span>Clips:</span>
+            <input id="maxClips" type="number" value="10" min="1" max="25" />
           </div>
+          <div class="setting-pill">
+            <span>Speed:</span>
+            <input id="speed" type="number" value="1.1" step="0.05" />
+          </div>
+          <button id="advancedToggle" class="text-btn" type="button">Settings +</button>
         </div>
 
-        <section id="authPanel" class="panel hidden">
-          <div class="panel-title">Account</div>
-          <div id="signedOutAuth" class="form">
-            <label class="field">
-              <span>Email</span>
-              <input id="authEmail" type="email" placeholder="you@example.com" autocomplete="email" />
-            </label>
-            <button id="sendMagicLink" class="secondary" type="button">Send sign-in link</button>
-            <p class="hint">Sign in to use daily free renders.</p>
-          </div>
-          <div id="signedInAuth" class="form hidden">
-            <div>
-              <div class="metric-label">Signed in</div>
-              <div id="authUserEmail" class="auth-email"></div>
-            </div>
-            <button id="signOut" class="secondary" type="button">Sign out</button>
-            <p id="dailyLimitText" class="hint"></p>
-          </div>
-        </section>
-
-        <section class="panel">
-          <div class="panel-title">Analyze</div>
-          <form id="analyzeForm" class="form">
-            <label class="field">
-              <span>YouTube URL</span>
-              <input id="youtubeUrl" type="url" placeholder="https://youtu.be/..." required />
-            </label>
-
-            <div class="grid-two">
-              <label class="field">
-                <span>Clips</span>
-                <input id="maxClips" type="number" min="1" max="25" value="10" />
-              </label>
-              <label class="field">
-                <span>Speed</span>
-                <input id="speed" type="number" min="0.75" max="2" step="0.05" value="1.1" />
-              </label>
-            </div>
-
-            <div class="grid-two">
-              <label class="field">
-                <span>Min sec</span>
-                <input id="minDuration" type="number" min="5" max="180" value="20" />
-              </label>
-              <label class="field">
-                <span>Max sec</span>
-                <input id="maxDuration" type="number" min="10" max="300" value="75" />
-              </label>
-            </div>
-
-            <button class="primary" type="submit">
-              <span>Analyze & render</span>
-              <span class="button-icon">↵</span>
-            </button>
-          </form>
-        </section>
-
-        <section class="panel compact">
-          <button id="advancedToggle" class="plain-toggle" type="button">Advanced settings</button>
-          <div id="advancedSettings" class="form hidden">
-            <p class="hint">Optional developer override. Normal users do not need this.</p>
-            <label class="field">
-              <span>Gemini API key</span>
-              <input id="geminiApiKey" type="password" placeholder="Use your own Gemini key" autocomplete="off" />
-            </label>
-            <label class="field">
-              <span>YouTube API key</span>
-              <input id="youtubeApiKey" type="password" placeholder="Use your own YouTube v3 key" autocomplete="off" />
-            </label>
-            <button id="saveKeys" class="secondary" type="button">Save keys</button>
-          </div>
-        </section>
-
-        <section class="panel compact">
-          <div class="panel-title">Render</div>
-          <div class="render-actions">
-            <button id="renderTop5" class="secondary" type="button" disabled>Top 5</button>
-            <button id="renderNext5" class="secondary" type="button" disabled>Next 5</button>
-          </div>
-          <p class="hint">Analyze now renders all requested clips automatically.</p>
-        </section>
-      </aside>
-
-      <section class="workspace">
-        <header class="topbar">
-          <div>
-            <div class="eyebrow">Workspace</div>
-            <h1>Find the moments people already care about.</h1>
-          </div>
-          <div id="statusPill" class="status">Ready</div>
-        </header>
-
-        <section id="emptyState" class="empty-state">
-          <div class="empty-orbit">
-            <div class="empty-dot"></div>
-          </div>
-          <h2>Paste a YouTube link to rank clip moments.</h2>
-          <p>The app reads transcript timing, viewer comments, timestamp mentions, and Gemini scoring to avoid random cuts.</p>
-        </section>
-
-        <section id="videoSummary" class="summary hidden"></section>
-        <section id="clipList" class="clip-list"></section>
-        <section id="renderOutput" class="render-output hidden"></section>
+        <div id="advancedSettings" class="advanced-panel hidden">
+           <div class="setting-row">
+            <input id="minDuration" type="number" value="20" placeholder="Min sec" />
+            <input id="maxDuration" type="number" value="75" placeholder="Max sec" />
+           </div>
+           <div class="setting-row">
+            <input id="geminiApiKey" type="password" placeholder="Gemini Key Override" />
+            <input id="youtubeApiKey" type="password" placeholder="YouTube Key Override" />
+           </div>
+        </div>
       </section>
+
+      <section id="emptyState" class="empty-state">
+        <div class="editorial-divider"></div>
+        <p>Waiting for analysis to begin. <br>Our AI scans transcripts and comments for viewer impact.</p>
+      </section>
+
+      <section id="videoSummary" class="video-header hidden"></section>
+      <section id="clipList" class="clips-container"></section>
+      <section id="renderOutput" class="render-flow hidden"></section>
+
+      <footer class="magazine-footer">
+        <div id="authPanel" class="auth-section hidden">
+          <div id="signedOutAuth">
+            <p>Unlock daily render credits.</p>
+            <input id="authEmail" type="email" placeholder="Email" />
+            <button id="sendMagicLink" class="text-btn">Send Link</button>
+          </div>
+          <div id="signedInAuth" class="hidden">
+            <span id="authUserEmail"></span>
+            <span id="dailyLimitText"></span>
+            <button id="signOut" class="text-btn">Sign Out</button>
+          </div>
+        </div>
+      </footer>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="/static/app.js?v=auth1"></script>
+    <script src="/static/app.js?v=editorial_v2"></script>
   </body>
 </html>
