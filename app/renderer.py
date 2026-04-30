@@ -4,6 +4,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from app.config import get_settings
 from app.schemas import ClipResult
 
 
@@ -27,6 +28,8 @@ def download_source_video(youtube_url: str, output_dir: Path) -> Path:
         sys.executable,
         "-m",
         "yt_dlp",
+        "--remote-components",
+        "ejs:github",
         "-f",
         "bv*[height<=1080]+ba/b[height<=1080]/best",
         "--merge-output-format",
@@ -35,6 +38,9 @@ def download_source_video(youtube_url: str, output_dir: Path) -> Path:
         output_template,
         youtube_url,
     ]
+    cookies_file = get_settings().ytdlp_cookies_file
+    if cookies_file:
+        command[3:3] = ["--cookies", cookies_file]
     run_command(command, cwd=Path.cwd())
 
     source = output_dir / "source.mp4"

@@ -1,6 +1,7 @@
 from youtube_transcript_api import NoTranscriptFound, TranscriptsDisabled, YouTubeTranscriptApi
 from yt_dlp import YoutubeDL
 
+from app.config import get_settings
 from app.schemas import TranscriptItem
 
 
@@ -36,13 +37,18 @@ def clean_caption_text(text: str) -> str:
 
 def fetch_transcript_with_ytdlp(video_id: str, original_error: Exception) -> list[TranscriptItem]:
     url = f"https://www.youtube.com/watch?v={video_id}"
+    cookies_file = get_settings().ytdlp_cookies_file
     options = {
         "quiet": True,
         "skip_download": True,
         "writesubtitles": False,
         "writeautomaticsub": False,
         "noplaylist": True,
+        "ignore_no_formats_error": True,
+        "remote_components": ["ejs:github"],
     }
+    if cookies_file:
+        options["cookiefile"] = cookies_file
     try:
         with YoutubeDL(options) as ydl:
             info = ydl.extract_info(url, download=False)
@@ -54,7 +60,10 @@ def fetch_transcript_with_ytdlp(video_id: str, original_error: Exception) -> lis
         raise TranscriptError("Transcript is unavailable for this video")
 
     try:
-        with YoutubeDL({"quiet": True}) as ydl:
+        subtitle_options = {"quiet": True}
+        if cookies_file:
+            subtitle_options["cookiefile"] = cookies_file
+        with YoutubeDL(subtitle_options) as ydl:
             subtitle_text = ydl.urlopen(subtitle_url).read().decode("utf-8", errors="replace")
     except Exception as exc:
         raise TranscriptError(f"Could not download transcript subtitles: {exc}") from exc
