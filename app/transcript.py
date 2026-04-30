@@ -1,7 +1,7 @@
 from youtube_transcript_api import NoTranscriptFound, TranscriptsDisabled, YouTubeTranscriptApi
 from yt_dlp import YoutubeDL
 
-from app.config import get_settings
+from app.config import get_ytdlp_cookies_file
 from app.schemas import TranscriptItem
 
 
@@ -37,7 +37,7 @@ def clean_caption_text(text: str) -> str:
 
 def fetch_transcript_with_ytdlp(video_id: str, original_error: Exception) -> list[TranscriptItem]:
     url = f"https://www.youtube.com/watch?v={video_id}"
-    cookies_file = get_settings().ytdlp_cookies_file
+    cookies_file = get_ytdlp_cookies_file()
     options = {
         "quiet": True,
         "skip_download": True,

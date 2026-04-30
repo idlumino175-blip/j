@@ -17,7 +17,11 @@ Fill `.env` with:
 GEMINI_API_KEY=...
 GEMINI_MODEL=gemini-3-flash-preview
 YOUTUBE_API_KEY=...
+YTDLP_COOKIES_FILE=
+YTDLP_COOKIES_CONTENT=
 ```
+
+Use `YTDLP_COOKIES_FILE` locally when you have a cookie file path. On Vercel, use `YTDLP_COOKIES_CONTENT` and paste the Netscape cookie text as the secret value.
 
 ## Run
 
@@ -36,4 +40,3 @@ Rendered clips are saved under `renders/<video_id>/clips/` as 1080x1920 MP4 file
 - no hook title overlay by default
 - lip-sync-safe start/end trimming
 - 1.1x playback speed by default
-
