@@ -1,4 +1,11 @@
-from youtube_transcript_api import NoTranscriptFound, TranscriptsDisabled, YouTubeTranscriptApi
+import re
+
+from youtube_transcript_api import (
+    CouldNotRetrieveTranscript,
+    NoTranscriptFound,
+    TranscriptsDisabled,
+    YouTubeTranscriptApi,
+)
 from yt_dlp import YoutubeDL
 
 from app.config import get_ytdlp_cookies_file
@@ -9,15 +16,66 @@ class TranscriptError(RuntimeError):
     pass
 
 
-def fetch_transcript(video_id: str) -> list[TranscriptItem]:
-    try:
-        rows = YouTubeTranscriptApi.get_transcript(video_id, languages=["en"])
-    except (NoTranscriptFound, TranscriptsDisabled) as exc:
-        return fetch_transcript_with_ytdlp(video_id, exc)
-    except Exception as exc:
-        return fetch_transcript_with_ytdlp(video_id, exc)
+# Broad language list — we try everything, not just English
+_PREFERRED_LANGUAGES = [
+    "en", "en-US", "en-GB", "en-AU", "en-IN", "en-CA",
+    "hi", "es", "fr", "de", "pt", "pt-BR", "ja", "ko",
+    "zh-Hans", "zh-Hant", "ar", "ru", "it", "nl", "tr",
+    "pl", "id", "vi", "th", "sv", "da", "fi", "no",
+]
 
-    transcript = [
+
+def fetch_transcript(video_id: str) -> list[TranscriptItem]:
+    """
+    Try to get a transcript using three strategies in order:
+    1. youtube-transcript-api with a wide list of languages (incl. auto-generated)
+    2. youtube-transcript-api: grab ANY available transcript (whatever language)
+    3. yt-dlp subtitle download as a final fallback
+    """
+    # --- Strategy 1: preferred languages via youtube-transcript-api ---
+    try:
+        rows = YouTubeTranscriptApi.get_transcript(
+            video_id,
+            languages=_PREFERRED_LANGUAGES,
+            preserve_formatting=False,
+        )
+        transcript = _rows_to_items(rows)
+        if transcript:
+            return transcript
+    except (NoTranscriptFound, TranscriptsDisabled, CouldNotRetrieveTranscript):
+        pass
+    except Exception:
+        pass
+
+    # --- Strategy 2: grab ANY available transcript ---
+    try:
+        transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+        # prefer manually created, then auto-generated
+        chosen = None
+        for t in transcript_list:
+            if not t.is_generated:
+                chosen = t
+                break
+        if chosen is None:
+            for t in transcript_list:
+                chosen = t
+                break
+        if chosen is not None:
+            rows = chosen.fetch()
+            transcript = _rows_to_items(rows)
+            if transcript:
+                return transcript
+    except (NoTranscriptFound, TranscriptsDisabled, CouldNotRetrieveTranscript):
+        pass
+    except Exception:
+        pass
+
+    # --- Strategy 3: yt-dlp fallback ---
+    return fetch_transcript_with_ytdlp(video_id)
+
+
+def _rows_to_items(rows) -> list[TranscriptItem]:
+    items = [
         TranscriptItem(
             start_sec=float(row["start"]),
             duration_sec=float(row.get("duration", 0)),
@@ -26,38 +84,44 @@ def fetch_transcript(video_id: str) -> list[TranscriptItem]:
         for row in rows
         if clean_caption_text(row.get("text", ""))
     ]
-    if not transcript:
-        raise TranscriptError("Transcript is empty")
-    return transcript
+    return items
 
 
 def clean_caption_text(text: str) -> str:
     return " ".join(text.replace("\n", " ").split())
 
 
-def fetch_transcript_with_ytdlp(video_id: str, original_error: Exception) -> list[TranscriptItem]:
+def fetch_transcript_with_ytdlp(video_id: str) -> list[TranscriptItem]:
     url = f"https://www.youtube.com/watch?v={video_id}"
     cookies_file = get_ytdlp_cookies_file()
+
     options = {
         "quiet": True,
         "skip_download": True,
-        "writesubtitles": False,
-        "writeautomaticsub": False,
+        "writesubtitles": True,
+        "writeautomaticsub": True,
+        "subtitleslangs": ["en", "en-orig", "en-US", "all"],
         "noplaylist": True,
         "ignore_no_formats_error": True,
-        "remote_components": ["ejs:github"],
     }
     if cookies_file:
         options["cookiefile"] = cookies_file
+
     try:
         with YoutubeDL(options) as ydl:
             info = ydl.extract_info(url, download=False)
     except Exception as exc:
-        raise TranscriptError(f"Could not fetch transcript: {original_error}; yt-dlp fallback also failed: {exc}") from exc
+        raise TranscriptError(
+            f"This video's transcript could not be retrieved. "
+            f"Please try a video with captions enabled. (Detail: {exc})"
+        ) from exc
 
     subtitle_url = choose_subtitle_url(info)
     if not subtitle_url:
-        raise TranscriptError("Transcript is unavailable for this video")
+        raise TranscriptError(
+            "This video has no available captions or transcript. "
+            "Please try a different video — ideally one with auto-generated or manual subtitles enabled."
+        )
 
     try:
         subtitle_options = {"quiet": True}
@@ -70,21 +134,30 @@ def fetch_transcript_with_ytdlp(video_id: str, original_error: Exception) -> lis
 
     transcript = parse_vtt(subtitle_text)
     if not transcript:
-        raise TranscriptError("Transcript is empty")
+        raise TranscriptError(
+            "Captions were found but appear to be empty. "
+            "Please try a video with more spoken content."
+        )
     return transcript
 
 
 def choose_subtitle_url(info: dict) -> str | None:
+    # Check manual subtitles first, then auto-generated
     for bucket_name in ("subtitles", "automatic_captions"):
         bucket = info.get(bucket_name) or {}
+        if not bucket:
+            continue
+        # Prefer English variants, then fall back to any language
         language_order = ["en", "en-orig", "en-US", "en-GB"]
-        language_order.extend(language for language in bucket if language.startswith("en-"))
-        language_order.extend(language for language in bucket if language not in language_order)
+        language_order.extend(lang for lang in bucket if lang.startswith("en-") and lang not in language_order)
+        language_order.extend(lang for lang in bucket if lang not in language_order)
         for language in language_order:
             entries = bucket.get(language) or []
-            vtt_entry = next((entry for entry in entries if entry.get("ext") == "vtt"), None)
-            if vtt_entry and vtt_entry.get("url"):
-                return vtt_entry["url"]
+            # prefer vtt, fall back to json3 or srv3
+            for preferred_ext in ("vtt", "json3", "srv3", "srv2", "srv1", "ttml"):
+                entry = next((e for e in entries if e.get("ext") == preferred_ext), None)
+                if entry and entry.get("url"):
+                    return entry["url"]
     return None
 
 
@@ -107,7 +180,7 @@ def parse_vtt(text: str) -> list[TranscriptItem]:
             current_start = None
             current_end = None
             current_lines = []
-        elif current_start is not None and not line.startswith(("WEBVTT", "Kind:", "Language:")):
+        elif current_start is not None and not line.startswith(("WEBVTT", "Kind:", "Language:", "NOTE")):
             current_lines.append(strip_vtt_markup(line))
 
     flush_vtt_block(transcript, current_start, current_end, current_lines)
@@ -124,7 +197,13 @@ def flush_vtt_block(
         return
     text = clean_caption_text(" ".join(lines))
     if text:
-        transcript.append(TranscriptItem(start_sec=start_sec, duration_sec=max(0.0, end_sec - start_sec), text=text))
+        transcript.append(
+            TranscriptItem(
+                start_sec=start_sec,
+                duration_sec=max(0.0, end_sec - start_sec),
+                text=text,
+            )
+        )
 
 
 def parse_vtt_timestamp(value: str) -> float:
@@ -136,10 +215,8 @@ def parse_vtt_timestamp(value: str) -> float:
 
 
 def strip_vtt_markup(text: str) -> str:
-    import re
-
     text = re.sub(r"<[^>]+>", "", text)
-    text = text.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">")
+    text = text.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&nbsp;", " ")
     return text
 
 
