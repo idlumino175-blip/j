@@ -140,6 +140,30 @@ def get_usage(user: CurrentUser = Depends(get_current_user)) -> dict[str, object
     return {"count": count_todays_renders(user.id)}
 
 
+@app.get("/renders")
+def list_renders() -> list[dict[str, str]]:
+    renders_dir = PROJECT_DIR / "renders"
+    if not renders_dir.exists():
+        return []
+    
+    clips = []
+    # Loop through video folders
+    for video_dir in renders_dir.iterdir():
+        if not video_dir.is_dir():
+            continue
+        clips_dir = video_dir / "clips"
+        if not clips_dir.exists():
+            continue
+        # Loop through clip files
+        for clip_file in clips_dir.glob("*.mp4"):
+            clips.append({
+                "name": clip_file.name,
+                "path": str(clip_file.resolve()),
+                "video_id": video_dir.name
+            })
+    return sorted(clips, key=lambda x: x["name"])
+
+
 @app.get("/files")
 def files(path: str) -> FileResponse:
     resolved = Path(path).resolve()

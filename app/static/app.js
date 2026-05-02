@@ -1,15 +1,22 @@
-// Pure Stitch AI Implementation: 100% Fidelity Rebuild
+// Pure Design Rebuild: Opus Previews & Stitch AI Fidelity
 const analyzeForm = document.querySelector("#analyzeForm");
 const youtubeUrlInput = document.querySelector("#youtubeUrl");
 const landingPhase = document.querySelector("#landingPhase");
 const forgePhase = document.querySelector("#forgePhase");
 const selectionPhase = document.querySelector("#selectionPhase");
 const resultPhase = document.querySelector("#resultPhase");
+const myClipsPhase = document.querySelector("#myClipsPhase");
+const apiPhase = document.querySelector("#apiPhase");
 
-const urlPreview = document.querySelector("#urlPreview");
-const previewTitle = document.querySelector("#previewTitle");
-const previewThumb = document.querySelector("#previewThumb img");
-const previewChannel = document.querySelector("#previewChannel");
+const navDashboard = document.querySelector("#navDashboard");
+const navMyClips = document.querySelector("#navMyClips");
+const navAPI = document.querySelector("#navAPI");
+
+const historyGrid = document.querySelector("#historyGrid");
+const apiGemini = document.querySelector("#apiGemini");
+const apiYoutube = document.querySelector("#apiYoutube");
+const saveApiBtn = document.querySelector("#saveApiBtn");
+const apiMessage = document.querySelector("#apiMessage");
 
 const clipList = document.querySelector("#clipList");
 const renderOutput = document.querySelector("#renderOutput");
@@ -41,6 +48,54 @@ let fluidProgressInterval = null;
 // UI Toggles
 authBtnNav?.addEventListener("click", () => authOverlay.classList.remove("hidden"));
 closeAuth?.addEventListener("click", () => authOverlay.classList.add("hidden"));
+
+navDashboard?.addEventListener("click", () => showPhase("landing"));
+navMyClips?.addEventListener("click", () => {
+    showPhase("myclips");
+    fetchHistory();
+});
+navAPI?.addEventListener("click", () => {
+    showPhase("api");
+    apiGemini.value = localStorage.getItem("gemini_key") || "";
+    apiYoutube.value = localStorage.getItem("youtube_key") || "";
+});
+
+saveApiBtn?.addEventListener("click", () => {
+    localStorage.setItem("gemini_key", apiGemini.value.trim());
+    localStorage.setItem("youtube_key", apiYoutube.value.trim());
+    apiMessage.classList.remove("opacity-0");
+    setTimeout(() => apiMessage.classList.add("opacity-0"), 3000);
+});
+
+async function fetchHistory() {
+    historyGrid.innerHTML = `
+        <div class="col-span-full p-20 text-center">
+            <div class="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Retrieving forged history...</p>
+        </div>
+    `;
+    try {
+        const resp = await fetch("/renders");
+        const clips = await resp.json();
+        if (clips.length === 0) {
+            historyGrid.innerHTML = `<p class="col-span-full text-center py-20 text-slate-400 font-bold">No assets found in your forge history.</p>`;
+            return;
+        }
+        historyGrid.innerHTML = clips.map(c => `
+            <div class="bg-white rounded-2xl p-6 border border-surface-container shadow-sm hover:shadow-xl transition-all group">
+                <div class="relative aspect-[9/16] bg-black rounded-xl overflow-hidden mb-6 border border-slate-100">
+                    <video src="/files?path=${encodeURIComponent(c.path)}" class="w-full h-full object-cover"></video>
+                </div>
+                <h4 class="font-bold text-primary truncate mb-4 text-sm">${c.name}</h4>
+                <a href="/files?path=${encodeURIComponent(c.path)}" download class="w-full py-3 bg-secondary-container text-on-secondary-container rounded-full font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 hover:bg-[#bdcabe] transition-all">
+                    <span class="material-symbols-outlined text-sm">download</span> Download
+                </a>
+            </div>
+        `).join("");
+    } catch (e) {
+        historyGrid.innerHTML = `<p class="col-span-full text-center py-20 text-red-400">Failed to load history.</p>`;
+    }
+}
 
 cancelForgeBtn?.addEventListener("click", async () => {
     if (!currentJobId) return;
@@ -144,6 +199,8 @@ analyzeForm?.addEventListener("submit", async (e) => {
     max_duration_sec: 75,
     speed: Number(document.querySelector("#speed")?.value || 1.1),
     style: "black-box",
+    gemini_api_key: localStorage.getItem("gemini_key") || null,
+    youtube_api_key: localStorage.getItem("youtube_key") || null,
   };
   lastRequest = payload;
   showPhase("forge");
@@ -163,7 +220,13 @@ generateSelectedBtn?.addEventListener("click", async () => {
     updateForge(5, "Forging selected moments...");
     if (forgeSteps) forgeSteps.innerHTML = "";
     try {
-        const job = await postJson("/render", { ...lastRequest, start_rank: checked[0], max_clips: checked.length });
+        const job = await postJson("/render", { 
+            ...lastRequest, 
+            start_rank: checked[0], 
+            max_clips: checked.length,
+            gemini_api_key: localStorage.getItem("gemini_key") || null,
+            youtube_api_key: localStorage.getItem("youtube_key") || null,
+        });
         currentJobId = job.id;
         pollRenderJob(job.id);
     } catch (e) { alert(e.message); showPhase("selection"); }
@@ -187,6 +250,20 @@ function pollRenderJob(jobId) {
     const job = await fetch(`/render/jobs/${jobId}`).then(r => r.json());
     if (job.status === "cancelled") { clearInterval(activeJobTimer); showPhase("landing"); return; }
     
+    // Update Live Logs
+    if (job.logs && job.logs.length > 0) {
+        const logContainer = document.querySelector("#forgeLogs");
+        if (logContainer) {
+            logContainer.innerHTML = job.logs.map(l => `
+                <div class="flex gap-3">
+                    <span class="text-slate-300 font-bold">[${l.time}]</span>
+                    <span class="text-slate-600">${l.msg}</span>
+                </div>
+            `).join("");
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+    }
+
     if (job.phase === "analyzing") {
         updateForge(jobPercent(job), "Analyzing narrative nodes...");
         addForgeStep("Downloading video", "done");
@@ -210,11 +287,36 @@ function pollRenderJob(jobId) {
 }
 
 function showPhase(name) {
-    [landingPhase, forgePhase, selectionPhase, resultPhase].forEach(p => p.classList.add("hidden"));
-    if (name === "landing") { landingPhase.classList.remove("hidden"); stopFluidProgress(); }
+    [landingPhase, forgePhase, selectionPhase, resultPhase, myClipsPhase, apiPhase].forEach(p => p.classList.add("hidden"));
+    
+    // Update nav active state
+    [navDashboard, navMyClips, navAPI].forEach(link => {
+        if (!link) return;
+        link.classList.remove("text-primary", "font-semibold");
+        link.classList.add("text-on-surface-variant", "font-medium");
+        const dot = link.querySelector("span");
+        if (dot) dot.classList.replace("w-full", "w-0");
+    });
+
+    if (name === "landing") {
+        landingPhase.classList.remove("hidden");
+        navDashboard?.classList.add("text-primary", "font-semibold");
+        navDashboard?.querySelector("span")?.classList.replace("w-0", "w-full");
+        stopFluidProgress();
+    }
     if (name === "forge") { forgePhase.classList.remove("hidden"); startFluidProgress(); }
     if (name === "selection") { selectionPhase.classList.remove("hidden"); stopFluidProgress(); }
     if (name === "result") { resultPhase.classList.remove("hidden"); stopFluidProgress(); }
+    if (name === "myclips") {
+        myClipsPhase.classList.remove("hidden");
+        navMyClips?.classList.add("text-primary", "font-semibold");
+        navMyClips?.querySelector("span")?.classList.replace("w-0", "w-full");
+    }
+    if (name === "api") {
+        apiPhase.classList.remove("hidden");
+        navAPI?.classList.add("text-primary", "font-semibold");
+        navAPI?.querySelector("span")?.classList.replace("w-0", "w-full");
+    }
     window.scrollTo(0, 0);
 }
 
@@ -301,7 +403,14 @@ async function renderSingle(rank) {
     showPhase("forge");
     updateForge(5, "Forging specific moment...");
     try {
-        const job = await postJson("/render", { ...lastRequest, start_rank: rank, max_clips: 1, target_rank: rank });
+        const job = await postJson("/render", { 
+            ...lastRequest, 
+            start_rank: rank, 
+            max_clips: 1, 
+            target_rank: rank,
+            gemini_api_key: localStorage.getItem("gemini_key") || null,
+            youtube_api_key: localStorage.getItem("youtube_key") || null,
+        });
         currentJobId = job.id;
         pollRenderJob(job.id);
     } catch (e) { alert(e.message); showPhase("selection"); }
