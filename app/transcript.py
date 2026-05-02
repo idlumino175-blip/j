@@ -70,8 +70,16 @@ def fetch_transcript(video_id: str) -> list[TranscriptItem]:
     except Exception:
         pass
 
-    # --- Strategy 3: yt-dlp fallback ---
-    return fetch_transcript_with_ytdlp(video_id)
+    # --- Strategy 3: yt-dlp fallback (With Cookies) ---
+    try:
+        return fetch_transcript_with_ytdlp(video_id, use_cookies=True)
+    except TranscriptError as exc_with_cookies:
+        # --- Strategy 4: yt-dlp fallback (Without Cookies - in case cookies are poisoned/expired) ---
+        try:
+            return fetch_transcript_with_ytdlp(video_id, use_cookies=False)
+        except TranscriptError:
+            # Raise the original error if both failed
+            raise exc_with_cookies
 
 
 def _rows_to_items(rows) -> list[TranscriptItem]:
@@ -91,9 +99,9 @@ def clean_caption_text(text: str) -> str:
     return " ".join(text.replace("\n", " ").split())
 
 
-def fetch_transcript_with_ytdlp(video_id: str) -> list[TranscriptItem]:
+def fetch_transcript_with_ytdlp(video_id: str, use_cookies: bool = True) -> list[TranscriptItem]:
     url = f"https://www.youtube.com/watch?v={video_id}"
-    cookies_file = get_ytdlp_cookies_file()
+    cookies_file = get_ytdlp_cookies_file() if use_cookies else None
 
     options = {
         "quiet": True,
