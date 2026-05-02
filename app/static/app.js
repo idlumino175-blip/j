@@ -22,7 +22,7 @@
         apiMessage: select("#apiMessage"),
         urlPreview: select("#urlPreview"),
         previewTitle: select("#previewTitle"),
-        previewThumb: select("#previewThumb"),
+        previewThumb: select("#previewThumbImg"),
         previewChannel: select("#previewChannel"),
         clipList: select("#clipList"),
         renderOutput: select("#renderOutput"),
