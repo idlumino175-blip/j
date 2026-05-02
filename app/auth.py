@@ -4,10 +4,37 @@ from fastapi import Header, HTTPException, Depends
 from app.config import get_settings
 from dataclasses import dataclass
 from datetime import datetime, timezone
+import os
+from pathlib import Path
 
-# Initialize Firebase Admin
-cred = credentials.Certificate("mekm-35d98-firebase-adminsdk-fbsvc-06ce6df159.json") 
-firebase_admin.initialize_app(cred)
+def _initialize_firebase():
+    settings = get_settings()
+    if not settings.auth_enabled:
+        return
+
+    try:
+        firebase_admin.get_app()
+    except ValueError:
+        # 1. Try environment variables (best for Vercel)
+        if os.getenv("FIREBASE_PRIVATE_KEY"):
+            cred_dict = {
+                "type": "service_account",
+                "project_id": os.getenv("FIREBASE_PROJECT_ID"),
+                "private_key_id": os.getenv("FIREBASE_PRIVATE_KEY_ID"),
+                "private_key": os.getenv("FIREBASE_PRIVATE_KEY").replace("\\n", "\n"),
+                "client_email": os.getenv("FIREBASE_CLIENT_EMAIL"),
+                "token_uri": "https://oauth2.googleapis.com/token",
+            }
+            cred = credentials.Certificate(cred_dict)
+            firebase_admin.initialize_app(cred)
+        # 2. Fallback to local file
+        elif Path("mekm-35d98-firebase-adminsdk-fbsvc-06ce6df159.json").exists():
+            cred = credentials.Certificate("mekm-35d98-firebase-adminsdk-fbsvc-06ce6df159.json")
+            firebase_admin.initialize_app(cred)
+        else:
+            print("WARNING: Firebase not initialized. Service account missing.")
+
+_initialize_firebase()
 
 @dataclass
 class CurrentUser:
