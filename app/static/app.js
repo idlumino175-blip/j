@@ -135,7 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Clipper AI: Critical System Error:", err);
     });
 });
-});
 
 signInBtn?.addEventListener("click", async () => {
   const email = document.querySelector("#authEmail").value;
