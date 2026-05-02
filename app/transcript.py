@@ -103,6 +103,7 @@ def fetch_transcript_with_ytdlp(video_id: str) -> list[TranscriptItem]:
         "subtitleslangs": ["en", "en-orig", "en-US", "all"],
         "noplaylist": True,
         "ignore_no_formats_error": True,
+        "extractor_args": {"youtube": {"player_client": ["android", "ios", "web"]}},
     }
     if cookies_file:
         options["cookiefile"] = cookies_file
