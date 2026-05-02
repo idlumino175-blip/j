@@ -288,15 +288,17 @@
         const videoId = extractVideoId(lastRequest.youtube_url);
         if (els.momentsCountText) els.momentsCountText.textContent = `${clips.length} moments found`;
         els.clipList.innerHTML = clips.map(clip => `
-            <div class="group relative bg-white rounded-2xl p-6 border border-outline flex flex-col">
-                <div class="relative w-full aspect-[9/16] bg-black rounded-xl overflow-hidden mb-6 border border-outline">
-                    <iframe class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] h-full pointer-events-none"
-                        src="https://www.youtube.com/embed/${videoId}?start=${Math.floor(clip.start_sec)}&end=${Math.floor(clip.end_sec)}&autoplay=0&controls=0&mute=1&loop=1&playlist=${videoId}&modestbranding=1" 
+            <div class="clip-card">
+                <div class="clip-video">
+                    <iframe src="https://www.youtube.com/embed/${videoId}?start=${Math.floor(clip.start_sec)}&end=${Math.floor(clip.end_sec)}&autoplay=0&controls=0&mute=1&loop=1&playlist=${videoId}&modestbranding=1" 
                         frameborder="0" allow="autoplay; encrypted-media"></iframe>
                 </div>
-                <div class="mb-4 flex items-center justify-between"><span class="text-[10px] text-secondary bg-secondary-container px-2 py-1 rounded-full font-black uppercase">Clip 0${clip.rank}</span><span class="font-bold text-primary">${clip.score}</span></div>
-                <h3 class="font-bold text-primary truncate mb-2">${clip.title}</h3>
-                <button onclick="renderSingle(${clip.rank})" class="mt-auto w-full py-3 bg-primary text-on-primary rounded-full font-black uppercase text-[10px] tracking-widest">Forge Now</button>
+                <div class="clip-body">
+                    <div class="clip-rank">Clip ${String(clip.rank).padStart(2,'0')}</div>
+                    <div class="clip-title">${clip.title}</div>
+                    <div class="clip-score">${clip.score}<span>/ 100</span></div>
+                    <button onclick="renderSingle(${clip.rank})" class="forge-btn">⚡ Forge This Clip</button>
+                </div>
             </div>
         `).join("");
     };
@@ -304,17 +306,20 @@
     const showFinalResults = (files) => {
         showPhase("result");
         els.renderOutput.innerHTML = files.map((file, i) => `
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-20">
-                <div class="lg:col-span-7 flex justify-center">
-                    <div class="aspect-[9/16] w-full max-w-[400px] bg-black rounded-lg overflow-hidden border-4 border-white shadow-2xl">
-                        <video controls src="/files?path=${encodeURIComponent(file)}" class="w-full h-full object-cover"></video>
+            <div class="result-item">
+                <div style="display:flex;justify-content:center;">
+                    <div class="result-player">
+                        <video controls src="/files?path=${encodeURIComponent(file)}"></video>
                     </div>
                 </div>
-                <div class="lg:col-span-5 space-y-6">
-                    <div class="bg-white rounded-lg p-10 shadow-xl border border-outline">
-                        <h2 class="text-2xl font-black mb-8">Asset 0${i+1}</h2>
-                        <a href="/files?path=${encodeURIComponent(file)}" download class="block w-full py-5 bg-primary text-on-primary rounded-full text-center font-black uppercase text-xs shadow-2xl">Download HD</a>
-                    </div>
+                <div class="result-panel">
+                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent);">Asset ${String(i+1).padStart(2,'0')}</div>
+                    <h2 style="font-family:'Instrument Serif',serif;font-size:36px;font-weight:400;line-height:1.2;">Your clip<br/>is ready.</h2>
+                    <p style="color:var(--text-2);font-size:15px;line-height:1.7;">Optimized for TikTok, Instagram Reels & YouTube Shorts. Download and post.</p>
+                    <a href="/files?path=${encodeURIComponent(file)}" download class="download-btn">
+                        <span class="material-symbols-outlined" style="font-size:20px;">download</span>
+                        Download HD
+                    </a>
                 </div>
             </div>
         `).join("");
@@ -326,7 +331,7 @@
         try {
             const resp = await fetch("/renders");
             const clips = await resp.json();
-            els.historyGrid.innerHTML = clips.map(c => `<div class="bg-white rounded-2xl p-6 border border-outline"><div class="aspect-[9/16] bg-black rounded-xl overflow-hidden mb-6"><video src="/files?path=${encodeURIComponent(c.path)}" class="w-full h-full object-cover"></video></div><h4 class="font-bold text-primary truncate text-sm mb-4">${c.name}</h4><a href="/files?path=${encodeURIComponent(c.path)}" download class="block w-full py-3 bg-secondary-container text-on-secondary-container rounded-full text-center font-black uppercase text-[10px]">Download</a></div>`).join("");
+            els.historyGrid.innerHTML = clips.map(c => `<div class="history-card"><div class="history-video"><video src="/files?path=${encodeURIComponent(c.path)}"></video></div><div class="history-card-body"><div class="history-name">${c.name}</div><a href="/files?path=${encodeURIComponent(c.path)}" download class="history-dl">Download</a></div></div>`).join("");
         } catch (e) { els.historyGrid.innerHTML = "Error."; }
     }
 

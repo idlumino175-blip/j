@@ -1,353 +1,297 @@
 <!DOCTYPE html>
-<html class="light" lang="en">
+<html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Clipper AI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script id="tailwind-config">
-          tailwind.config = {
-            darkMode: "class",
-            theme: {
-              extend: {
-                "colors": {
-                        "secondary-container": "#252525",
-                        "on-primary": "#000000",
-                        "surface": "#121212",
-                        "primary": "#ffffff",
-                        "secondary": "#a0a0a0",
-                        "on-surface": "#ffffff",
-                        "on-surface-variant": "#808080",
-                        "background": "#0f0f0f",
-                        "outline": "#333333",
-                        "outline-variant": "#222222",
-                        "surface-container": "#1a1a1a",
-                        "surface-container-low": "#151515",
-                        "surface-container-high": "#222222"
-                },
-                "borderRadius": {
-                        "DEFAULT": "1rem",
-                        "lg": "2rem",
-                        "xl": "3rem",
-                        "full": "9999px"
-                },
-                "spacing": {
-                        "container-max": "1280px",
-                        "unit": "8px",
-                        "gutter": "24px",
-                        "margin-mobile": "16px",
-                        "margin-desktop": "40px"
-                },
-                "fontFamily": {
-                        "h1": ["Inter"],
-                        "label-caps": ["Inter"],
-                        "body-md": ["Inter"],
-                        "h3": ["Inter"],
-                        "body-lg": ["Inter"],
-                        "h2": ["Inter"]
-                },
-                "fontSize": {
-                        "h1": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
-                        "label-caps": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.1em", "fontWeight": "700"}],
-                        "body-md": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
-                        "h3": ["24px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "500"}],
-                        "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
-                        "h2": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}]
-                }
-              },
-            },
-          }
-        </script>
-    <style>
-        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        body { background-color: #0f0f0f; }
-        .hidden { display: none !important; }
-        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .nav-link { position: relative; }
-        .nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background-color: currentColor; transition: width 0.3s ease; }
-        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
-        .ambient-shadow { box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); }
-    </style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Clipper AI — Turn Long Videos into Viral Moments</title>
+  <meta name="description" content="AI-powered YouTube clip finder. Paste a link, let Gemini find your viral moments, and export vertical clips in seconds."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/styles.css"/>
 </head>
-<body class="bg-background text-on-surface">
+<body>
 
-    <!-- Top Navigation -->
-    <nav class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-outline">
-        <div class="max-w-[1280px] mx-auto flex justify-between items-center h-20 px-10">
-            <div class="flex items-center gap-2.5 group cursor-pointer" onclick="location.reload()">
-                <div class="w-9 h-9 bg-primary rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:rotate-3 shadow-sm">
-                    <span class="material-symbols-outlined text-on-primary text-[20px]">content_cut</span>
-                </div>
-                <span class="text-xl font-extrabold text-primary tracking-tighter">Clipper<span class="text-secondary font-semibold">.ai</span></span>
-            </div>
-            <div class="flex items-center gap-12">
-                <a id="navDashboard" class="text-primary font-semibold text-[15px] relative py-2 cursor-pointer group" href="#">
-                    Dashboard
-                    <span class="absolute -bottom-1 left-0 w-full h-0.5 bg-primary transition-all duration-300"></span>
-                </a>
-                <a id="navMyClips" class="text-secondary font-medium text-[15px] hover:text-primary transition-all duration-300 relative group py-2 cursor-pointer" href="#">
-                    My Clips
-                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-                </a>
-                <a class="text-secondary font-medium text-[15px] hover:text-primary transition-all duration-300 relative group py-2 cursor-pointer" href="#">
-                    Pricing
-                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-                </a>
-                <a id="navAPI" class="text-secondary font-medium text-[15px] hover:text-primary transition-all duration-300 relative group py-2 cursor-pointer" href="#">
-                    API
-                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-                </a>
-            </div>
-            <div class="flex items-center gap-6">
-                <div id="authNav" class="flex items-center gap-4">
-                    <span id="userEmailDisplay" class="text-xs font-bold text-secondary hidden"></span>
-                    <button id="authBtn" class="text-secondary font-medium text-sm hover:text-primary transition-colors">Sign In</button>
-                    <button id="signOutBtn" class="text-secondary text-xs hidden">Sign Out</button>
-                </div>
-                <button class="bg-primary text-on-primary px-7 py-2.5 rounded-full text-sm font-bold hover:opacity-90 transition-all active:scale-95 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-[18px]">add</span>
-                    <span>New Clip</span>
-                </button>
-            </div>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo" onclick="location.reload()">
+      <div class="logo-mark">✦</div>
+      <div class="logo-text">Clipper<span>.ai</span></div>
+    </div>
+    <div class="nav-links">
+      <a id="navDashboard" class="nav-link active" href="#">Dashboard</a>
+      <a id="navMyClips" class="nav-link" href="#">My Clips</a>
+      <a id="navAPI" class="nav-link" href="#">API Keys</a>
+    </div>
+    <div class="nav-actions">
+      <span id="userEmailDisplay" class="btn btn-ghost" style="display:none;"></span>
+      <button id="authBtn" class="btn btn-ghost">Sign In</button>
+      <button id="signOutBtn" class="btn btn-ghost" style="display:none;">Sign Out</button>
+    </div>
+  </div>
+</nav>
+
+<main id="mainWorkspace">
+
+<!-- PHASE 1: LANDING -->
+<section id="landingPhase" class="phase view-phase">
+  <div class="hero">
+    <div class="hero-badge">
+      <span class="material-symbols-outlined" style="font-size:14px;">auto_awesome</span>
+      Powered by Gemini AI
+    </div>
+    <h1>Turn long videos into<br/><em>viral moments.</em></h1>
+    <p>Paste any YouTube link. Our AI finds the best clips and exports them as vertical shorts — in seconds.</p>
+
+    <div class="url-form">
+      <form id="analyzeForm">
+        <div class="url-input-wrap">
+          <span class="material-symbols-outlined url-input-icon">link</span>
+          <input id="youtubeUrl" class="url-input" type="url" placeholder="Paste your YouTube link here..." required autocomplete="off"/>
+          <button type="submit" class="url-submit">
+            <span class="material-symbols-outlined" style="font-size:18px;">bolt</span>
+            Forge Clips
+          </button>
         </div>
-    </nav>
-
-    <!-- CONTENT AREAS (PHASES) -->
-    <main id="mainWorkspace">
-
-        <!-- Phase 1: Landing -->
-        <section id="landingPhase" class="view-phase pt-40 pb-64 min-h-screen px-8">
-            <div class="max-w-[1280px] mx-auto">
-                <div class="flex flex-col items-center text-center space-y-12 mb-32">
-                    <div class="inline-flex items-center gap-2 px-5 py-2 bg-surface border border-outline rounded-full text-secondary mb-12">
-                        <span class="material-symbols-outlined text-[18px]">auto_awesome</span>
-                        <span class="font-label-caps text-[10px] uppercase tracking-[0.15em] font-bold">Powered by Gemini AI</span>
-                    </div>
-                    <div class="space-y-6 max-w-3xl mx-auto mb-12">
-                        <h1 class="font-h1 text-h1 text-primary leading-[1.1]">Turn long videos into <span class="italic text-secondary">viral moments.</span></h1>
-                        <p class="font-body-lg text-body-lg text-secondary max-w-xl mx-auto">Paste your link and let Gemini find the magic. High-performance video summarization for creators.</p>
-                    </div>
-                    <div class="w-full max-w-3xl mx-auto">
-                        <form id="analyzeForm" class="relative flex flex-col md:flex-row items-center bg-surface p-2 rounded-full border border-outline shadow-2xl focus-within:border-primary transition-all">
-                            <div class="flex-1 flex items-center px-6 gap-3">
-                                <span class="material-symbols-outlined text-secondary">link</span>
-                                <input id="youtubeUrl" class="w-full bg-transparent border-none focus:ring-0 py-4 text-body-lg text-primary placeholder-outline" placeholder="Paste your video link here..." type="url" required />
-                            </div>
-                            <button type="submit" class="w-full md:w-auto bg-primary text-on-primary px-12 py-4 rounded-full font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95">
-                                <span>Forge Clips</span>
-                                <span class="material-symbols-outlined text-[20px]">bolt</span>
-                            </button>
-                        </form>
-
-                        <!-- Opus-Style Video Preview -->
-                        <div id="urlPreview" class="hidden mt-8 p-8 bg-surface rounded-[32px] border border-outline flex flex-col md:flex-row items-center gap-8 text-left">
-                            <div id="previewThumbContainer" class="w-full md:w-56 aspect-video bg-background rounded-2xl overflow-hidden shadow-inner flex-shrink-0">
-                                <img id="previewThumbImg" src="" class="w-full h-full object-cover" />
-                            </div>
-                            <div class="flex-1 min-w-0 space-y-4">
-                                <div>
-                                    <p id="previewChannel" class="text-[10px] font-black text-secondary uppercase tracking-[0.2em] mb-1">Channel Source</p>
-                                    <h3 id="previewTitle" class="font-black text-xl text-primary leading-tight line-clamp-2">Fetching video details...</h3>
-                                </div>
-                                <div class="flex flex-wrap gap-4 pt-2">
-                                    <div class="flex items-center bg-background rounded-full px-5 py-2.5 gap-4 border border-outline">
-                                        <span class="font-label-caps text-[9px] text-secondary uppercase tracking-widest font-bold">Clips</span>
-                                        <div class="flex items-center gap-3">
-                                            <button type="button" onclick="document.querySelector('#maxClips').stepDown()" class="w-5 h-5 flex items-center justify-center rounded-full hover:bg-surface text-secondary transition-colors">&minus;</button>
-                                            <input id="maxClips" type="number" value="10" min="1" max="25" class="w-6 bg-transparent border-none text-center focus:ring-0 font-bold text-primary p-0 text-xs" />
-                                            <button type="button" onclick="document.querySelector('#maxClips').stepUp()" class="w-5 h-5 flex items-center justify-center rounded-full hover:bg-surface text-secondary transition-colors">&plus;</button>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center bg-background rounded-full px-5 py-2.5 gap-4 border border-outline">
-                                        <span class="font-label-caps text-[9px] text-secondary uppercase tracking-widest font-bold">Speed</span>
-                                        <div id="speedSelector" class="flex items-center gap-1.5">
-                                            <button type="button" onclick="setSpeed(1.0)" class="speed-pill px-2.5 py-1 rounded-full border border-transparent text-[10px] font-bold transition-all hover:bg-surface">1.0x</button>
-                                            <button type="button" onclick="setSpeed(1.1)" class="speed-pill px-2.5 py-1 rounded-full border border-primary bg-primary text-on-primary text-[10px] font-bold transition-all shadow-sm">1.1x</button>
-                                            <button type="button" onclick="setSpeed(1.2)" class="speed-pill px-2.5 py-1 rounded-full border border-transparent text-[10px] font-bold transition-all hover:bg-surface">1.2x</button>
-                                            <input id="speed" type="hidden" value="1.1" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <input id="style" type="hidden" value="black-box" />
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32 text-left">
-                    <div class="bg-surface p-10 rounded-lg shadow-sm border border-outline flex flex-col items-start gap-4 hover:border-primary/30 transition-all">
-                        <div class="w-12 h-12 bg-background flex items-center justify-center rounded-2xl"><span class="material-symbols-outlined text-primary">content_cut</span></div>
-                        <h3 class="font-h3 text-h3 text-primary">Smart Trimming</h3>
-                        <p class="font-body-md text-body-md text-secondary">Our AI identifies high-engagement moments and automatically crops for vertical formats.</p>
-                    </div>
-                    <div class="bg-surface p-10 rounded-lg shadow-sm border border-outline flex flex-col items-start gap-4 hover:border-primary/30 transition-all">
-                        <div class="w-12 h-12 bg-background flex items-center justify-center rounded-2xl"><span class="material-symbols-outlined text-primary">closed_caption</span></div>
-                        <h3 class="font-h3 text-h3 text-primary">Auto Captions</h3>
-                        <p class="font-body-md text-body-md text-secondary">Dynamic, high-retention subtitles generated in seconds with perfect timing.</p>
-                    </div>
-                    <div class="bg-surface p-10 rounded-lg shadow-sm border border-outline flex flex-col items-start gap-4 hover:border-primary/30 transition-all">
-                        <div class="w-12 h-12 bg-background flex items-center justify-center rounded-2xl"><span class="material-symbols-outlined text-primary">trending_up</span></div>
-                        <h3 class="font-h3 text-h3 text-primary">Viral Prediction</h3>
-                        <p class="font-body-md text-body-md text-secondary">Gemini analyzes hook strength to predict which clips will perform best on social.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- PHASE 2: FORGE -->
-        <section id="forgePhase" class="view-phase pt-40 pb-64 min-h-screen hidden flex flex-col items-center justify-center px-8 relative">
-            <div class="w-full max-w-3xl bg-surface rounded-xl shadow-2xl border border-outline p-12 md:p-16 flex flex-col items-center relative overflow-hidden text-center">
-                <button id="cancelForgeBtn" class="absolute top-8 right-8 z-20 text-[10px] font-black uppercase tracking-widest text-red-500 hover:text-red-400 transition-colors flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-sm">cancel</span> Cancel Extraction
-                </button>
-                <div class="relative w-72 h-72 flex items-center justify-center mb-10 mx-auto">
-                    <svg class="absolute inset-0 w-full h-full transform -rotate-90">
-                        <circle class="text-background" cx="144" cy="144" fill="transparent" r="120" stroke="currentColor" stroke-width="6"></circle>
-                        <circle id="forgeProgressCircle" class="text-primary transition-all duration-1000 ease-out" cx="144" cy="144" fill="transparent" r="120" stroke="currentColor" stroke-dasharray="754" stroke-dashoffset="754" stroke-linecap="round" stroke-width="6"></circle>
-                    </svg>
-                    <div class="absolute inset-0 rounded-full overflow-hidden">
-                        <div class="absolute inset-0 bg-[conic-gradient(from_0deg,transparent_0%,rgba(255,255,255,0.1)_50%,transparent_100%)] animate-[spin_3s_linear_infinite]"></div>
-                    </div>
-                    <div class="absolute inset-0 flex flex-col items-center justify-center z-10">
-                        <div class="relative mb-1">
-                            <span id="forgePercentText" class="font-h1 text-6xl font-black text-primary drop-shadow-sm">0%</span>
-                        </div>
-                        <span id="forgeActionLabel" class="font-label-caps text-[11px] text-secondary tracking-[0.3em] uppercase font-black opacity-80">Scanning</span>
-                    </div>
-                </div>
-                <div class="text-center mb-12">
-                    <h1 class="font-h2 text-3xl text-primary mb-3">Forging your clips...</h1>
-                    <p id="forgeStatusLabel" class="font-body-md text-secondary max-w-md mx-auto mb-10">AI engine extracting viral intelligence from your video.</p>
-                </div>
-                <div id="forgeLogs" class="w-full max-w-xl mx-auto mb-10 bg-background border border-outline rounded-2xl p-6 font-mono text-[11px] space-y-1.5 h-48 overflow-y-auto shadow-inner text-left text-secondary"></div>
-                <div id="forgeSteps" class="w-full space-y-4 max-w-xl mx-auto text-left"></div>
-            </div>
-        </section>
-
-        <!-- PHASE 3: SELECTION -->
-        <section id="selectionPhase" class="view-phase hidden px-8 pt-40 pb-64 min-h-screen">
-            <div class="max-w-[1280px] mx-auto">
-                <div class="flex flex-col md:flex-row gap-12 items-start mb-16 text-left">
-                    <div class="w-full md:w-2/3">
-                        <div class="relative group rounded-lg overflow-hidden bg-black aspect-video ambient-shadow border border-outline flex items-center justify-center text-white text-xs font-black uppercase tracking-widest opacity-60">Source Loaded</div>
-                    </div>
-                    <div class="w-full md:w-1/3 space-y-6">
-                        <h1 class="font-h1 text-h2 text-primary leading-none tracking-tight">Viral Analysis</h1>
-                        <p class="font-body-md text-body-md text-secondary leading-relaxed">Review segments Gemini identified as high-impact viral hooks.</p>
-                        <div class="flex items-center gap-4 p-5 rounded-2xl bg-surface border border-outline">
-                            <div class="w-10 h-10 rounded-full bg-background flex items-center justify-center text-primary">
-                                <span class="material-symbols-outlined">auto_awesome</span>
-                            </div>
-                            <div>
-                                <p class="font-label-caps text-[10px] text-secondary uppercase tracking-widest font-black">Intelligence Ready</p>
-                                <p id="momentsCountText" class="text-sm font-semibold text-primary">0 moments found</p>
-                            </div>
-                        </div>
-                        <button id="generateSelected" class="w-full bg-primary text-on-primary font-black py-5 rounded-full hover:opacity-90 shadow-2xl transition-all active:scale-[0.98]">
-                            Generate Selected Clips
-                        </button>
-                    </div>
-                </div>
-                <h2 class="font-h2 text-sm text-secondary mb-10 tracking-[0.2em] font-black uppercase">Viral Moments</h2>
-                <div id="clipList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-            </div>
-        </section>
-
-        <!-- PHASE 4: RESULT -->
-        <section id="resultPhase" class="view-phase hidden px-8 pt-40 pb-64 min-h-screen">
-            <div class="max-w-[1280px] mx-auto text-left">
-                <div class="mb-16">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-surface text-primary border border-outline rounded-full mb-4">
-                        <span class="material-symbols-outlined text-[18px]">check_circle</span>
-                        <span class="font-label-caps text-label-caps uppercase tracking-widest font-bold text-[10px]">Processing Complete</span>
-                    </div>
-                    <h1 class="font-h1 text-h1 text-primary leading-none tracking-tight">Your Clip is Ready</h1>
-                    <p class="font-body-lg text-body-lg text-secondary max-w-2xl mt-4">AI-optimized vertical format is finalized on a clean black canvas.</p>
-                </div>
-                <div id="renderOutput"></div>
-            </div>
-        </section>
-
-        <!-- PHASE 5: MY CLIPS -->
-        <section id="myClipsPhase" class="view-phase hidden px-8 pt-40 pb-64 min-h-screen">
-            <div class="max-w-[1280px] mx-auto">
-                <div class="mb-16 text-left">
-                    <h1 class="font-h1 text-h1 text-primary tracking-tight">My Forged Assets</h1>
-                    <p class="font-body-lg text-body-lg text-secondary max-w-2xl mt-4">Your personal library of viral intelligence extractions.</p>
-                </div>
-                <div id="historyGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-            </div>
-        </section>
-
-        <!-- PHASE 6: API SETTINGS -->
-        <section id="apiPhase" class="view-phase hidden px-8 pt-40 pb-64 min-h-screen">
-            <div class="max-w-[800px] mx-auto text-left">
-                <div class="mb-16">
-                    <h1 class="font-h1 text-h1 text-primary tracking-tight leading-none mb-4">API Configuration</h1>
-                    <p class="font-body-lg text-body-lg text-secondary">Connect your own Gemini AI engine securely.</p>
-                </div>
-                <div class="bg-surface rounded-[40px] p-12 border border-outline shadow-2xl space-y-12">
-                    <div class="space-y-4">
-                        <label class="font-label-caps text-[11px] text-secondary uppercase tracking-[0.2em] font-black">Google Gemini Key</label>
-                        <input id="apiGemini" type="password" placeholder="Enter API Key" class="w-full px-8 py-6 rounded-full bg-background border border-outline focus:border-primary outline-none font-medium text-primary shadow-inner" />
-                        <p class="text-[10px] text-secondary/60 px-6 font-bold uppercase tracking-widest italic">Note: Leave blank to use our system default AI engine.</p>
-                    </div>
-                    <button id="saveApiBtn" class="w-full py-6 bg-primary text-on-primary rounded-full font-black uppercase tracking-widest text-sm hover:opacity-90 shadow-2xl transition-all active:scale-[0.98]">
-                        Save Configuration
-                    </button>
-                    <p id="apiMessage" class="text-center text-xs font-black text-secondary uppercase tracking-[0.2em] opacity-0 transition-opacity">Settings saved successfully</p>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="w-full py-20 border-t border-outline bg-background font-['Inter'] text-sm">
-        <div class="max-w-[1280px] mx-auto flex flex-col md:flex-row justify-between items-center px-10 gap-12">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                    <span class="material-symbols-outlined text-on-primary text-[18px]">content_cut</span>
-                </div>
-                <span class="font-black text-primary tracking-tighter text-lg">Clipper AI</span>
-            </div>
-            <div class="flex gap-12 text-secondary font-bold uppercase tracking-widest text-[10px]">
-                <a class="hover:text-primary transition-colors" href="#">Privacy</a>
-                <a class="hover:text-primary transition-colors" href="#">Terms</a>
-                <a class="hover:text-primary transition-colors" href="#">Status</a>
-                <a class="hover:text-primary transition-colors" href="#">Contact</a>
-            </div>
-            <div class="text-outline text-xs italic opacity-60 font-medium">© 2024 Clipper AI. Professional Video Intelligence.</div>
-        </div>
-    </footer>
-
-    <!-- Auth Modal (High-End Obsidian Design) -->
-    <div id="authOverlay" class="fixed inset-0 z-[100] hidden bg-[#080808]/90 backdrop-blur-2xl flex items-center justify-center p-6">
-        <div class="w-full max-w-md bg-[#121212] rounded-[40px] overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.5)] border border-white/5 p-12 text-center fade-in relative">
-            <div class="absolute -top-24 -left-24 w-48 h-48 bg-primary/5 rounded-full blur-[80px]"></div>
-            <button id="closeAuth" class="absolute top-8 left-8 text-secondary hover:text-primary transition-colors text-2xl">&times;</button>
-            <div class="mb-12">
-                <div class="w-20 h-20 bg-background rounded-full mx-auto mb-8 flex items-center justify-center border border-outline shadow-inner">
-                    <span class="material-symbols-outlined text-4xl text-primary">fingerprint</span>
-                </div>
-                <h2 class="text-3xl font-black mb-3 tracking-tighter text-primary">Intelligence Access</h2>
-                <p class="text-secondary text-sm font-medium leading-relaxed max-w-[280px] mx-auto">Enter your credentials to unlock professional video intelligence.</p>
-            </div>
-            <div class="space-y-4 mb-10 text-left">
-                <input id="authEmail" type="email" placeholder="Email Address" class="w-full px-8 py-5 rounded-full bg-background border border-outline focus:border-primary outline-none text-sm font-semibold text-primary transition-all placeholder-secondary/40" />
-                <input id="authPassword" type="password" placeholder="Account Password" class="w-full px-8 py-5 rounded-full bg-background border border-outline focus:border-primary outline-none text-sm font-semibold text-primary transition-all placeholder-secondary/40" />
-                <p id="authMessage" class="text-red-400 text-[10px] font-black uppercase tracking-widest min-h-[14px] text-center mt-2"></p>
-            </div>
-            <div class="space-y-4">
-                <button id="signInBtn" class="w-full bg-primary text-on-primary py-5 rounded-full font-black uppercase tracking-[0.1em] text-xs shadow-2xl hover:opacity-90 transition-all active:scale-[0.98]">Sign In</button>
-                <button id="signUpBtn" class="w-full py-5 bg-transparent border border-outline text-primary rounded-full font-black uppercase tracking-[0.1em] text-xs hover:bg-surface transition-all active:scale-[0.98]">Create Free Account</button>
-            </div>
-        </div>
+      </form>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="/static/app.js?v=vercel_fix_final_v4"></script>
-    </body>
-    </html>
+    <!-- URL PREVIEW -->
+    <div id="urlPreview" class="preview-card hidden">
+      <div style="position:relative;flex-shrink:0;">
+        <img id="previewThumbImg" class="preview-thumb" src="" alt=""/>
+      </div>
+      <div class="preview-info">
+        <div id="previewChannel" class="preview-channel">Channel</div>
+        <div id="previewTitle" class="preview-title">Fetching video details...</div>
+        <div class="preview-controls">
+          <div class="control-pill">
+            <span class="control-label">Clips</span>
+            <button type="button" onclick="document.querySelector('#maxClips').stepDown()">−</button>
+            <input id="maxClips" type="number" value="10" min="1" max="25"/>
+            <button type="button" onclick="document.querySelector('#maxClips').stepUp()">+</button>
+          </div>
+          <div class="control-pill">
+            <span class="control-label">Speed</span>
+            <div class="speed-pill" id="speedSelector">
+              <button type="button" class="speed-opt" onclick="setSpeed(1.0)">1.0×</button>
+              <button type="button" class="speed-opt active" onclick="setSpeed(1.1)">1.1×</button>
+              <button type="button" class="speed-opt" onclick="setSpeed(1.2)">1.2×</button>
+            </div>
+            <input id="speed" type="hidden" value="1.1"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- FEATURES -->
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-icon"><span class="material-symbols-outlined">content_cut</span></div>
+      <div class="feature-title">Smart Trimming</div>
+      <div class="feature-desc">AI identifies the highest-engagement moments and crops them for vertical formats automatically.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><span class="material-symbols-outlined">auto_awesome</span></div>
+      <div class="feature-title">Viral Prediction</div>
+      <div class="feature-desc">Gemini scores every segment for hook strength, so you always know which clips will perform best.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><span class="material-symbols-outlined">rocket_launch</span></div>
+      <div class="feature-title">Instant Export</div>
+      <div class="feature-desc">Ready-to-post vertical clips delivered in seconds. No editing software required.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PHASE 2: FORGE -->
+<section id="forgePhase" class="phase hidden view-phase">
+  <div class="forge-wrap">
+    <div class="forge-header">
+      <h1>Forging your clips…</h1>
+      <p id="forgeStatusLabel">AI engine is extracting viral intelligence from your video.</p>
+    </div>
+
+    <!-- Hidden SVG circle kept for JS compatibility -->
+    <svg style="display:none;">
+      <circle id="forgeProgressCircle"/>
+    </svg>
+    <span id="forgePercentText" style="display:none;"></span>
+    <span id="forgeActionLabel" style="display:none;"></span>
+
+    <!-- Step-by-step progress -->
+    <div class="forge-steps-list" id="forgeSteps">
+      <div class="forge-step" id="step-fetch">
+        <div class="step-num active" id="step-fetch-num">1</div>
+        <div class="step-content">
+          <div class="step-name">Fetching Transcript</div>
+          <div class="step-desc">Downloading video transcript and metadata from YouTube.</div>
+          <div class="step-bar visible" id="step-fetch-bar"><div class="step-bar-fill" style="width:100%"></div></div>
+        </div>
+      </div>
+      <div class="forge-step" id="step-analyze">
+        <div class="step-num" id="step-analyze-num">2</div>
+        <div class="step-content">
+          <div class="step-name">AI Analysis</div>
+          <div class="step-desc">Gemini scanning for high-impact viral moments across the video.</div>
+          <div class="step-bar" id="step-analyze-bar"><div class="step-bar-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="forge-step" id="step-render">
+        <div class="step-num" id="step-render-num">3</div>
+        <div class="step-content">
+          <div class="step-name">Rendering Clips</div>
+          <div class="step-desc">Encoding and exporting vertical video files.</div>
+          <div class="step-bar" id="step-render-bar"><div class="step-bar-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="forgeLogs" class="log-box"></div>
+    <button id="cancelForgeBtn" class="cancel-btn">✕ Cancel Extraction</button>
+  </div>
+</section>
+
+<!-- PHASE 3: SELECTION -->
+<section id="selectionPhase" class="phase hidden view-phase" style="padding-bottom:100px;">
+  <div class="sel-wrap">
+    <div class="sel-header">
+      <div>
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent);margin-bottom:8px;">Step 2 — Select Your Clips</div>
+        <div class="sel-title">Viral Analysis<br/>Complete</div>
+      </div>
+      <div class="sel-meta">
+        <div id="momentsCountText" class="moments-badge">0 moments found</div>
+        <button id="generateSelected" class="btn btn-primary btn-lg">Generate Selected</button>
+      </div>
+    </div>
+    <div id="clipList" class="clips-grid"></div>
+  </div>
+  <div class="gen-bar">
+    <div class="gen-bar-info">Select the clips you want to render, then hit Generate.</div>
+    <button id="generateSelected2" class="btn btn-primary" onclick="document.getElementById('generateSelected').click()">
+      <span class="material-symbols-outlined" style="font-size:18px;">video_library</span>
+      Generate Clips
+    </button>
+  </div>
+</section>
+
+<!-- PHASE 4: RESULT -->
+<section id="resultPhase" class="phase hidden view-phase">
+  <div class="result-wrap">
+    <div class="result-badge">
+      <span class="material-symbols-outlined" style="font-size:14px;">check_circle</span>
+      Processing Complete
+    </div>
+    <h1 class="result-title">Your clip<br/>is ready.</h1>
+    <p class="result-sub">AI-optimized vertical format, ready to post on TikTok, Reels & Shorts.</p>
+    <div id="renderOutput"></div>
+  </div>
+</section>
+
+<!-- PHASE 5: MY CLIPS -->
+<section id="myClipsPhase" class="phase hidden view-phase">
+  <div class="history-wrap">
+    <h1 class="history-title">My Clips</h1>
+    <p class="history-sub">Your personal library of forged viral assets.</p>
+    <div id="historyGrid" class="history-grid"></div>
+  </div>
+</section>
+
+<!-- PHASE 6: API -->
+<section id="apiPhase" class="phase hidden view-phase">
+  <div class="api-wrap">
+    <h1 class="api-title">API Keys</h1>
+    <p class="api-sub">Connect your own Gemini AI key for unlimited processing.</p>
+    <div class="api-card">
+      <label class="form-label">Google Gemini Key</label>
+      <input id="apiGemini" class="form-input" type="password" placeholder="AIza..."/>
+      <p class="form-hint">Leave blank to use the system default key.</p>
+      <button id="saveApiBtn" class="save-btn">Save Configuration</button>
+      <div id="apiMessage" class="save-msg">✓ Saved successfully</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer style="border-top:1px solid var(--border);padding:40px;margin-top:80px;">
+  <div class="footer" style="margin:0 auto;">
+    <div class="logo">
+      <div class="logo-mark">✦</div>
+      <div class="logo-text">Clipper<span>.ai</span></div>
+    </div>
+    <div class="footer-links">
+      <a href="#" class="footer-link">Privacy</a>
+      <a href="#" class="footer-link">Terms</a>
+      <a href="#" class="footer-link">Status</a>
+      <a href="#" class="footer-link">Contact</a>
+    </div>
+    <div class="footer-copy">© 2025 Clipper AI. All rights reserved.</div>
+  </div>
+</footer>
+
+<!-- AUTH MODAL -->
+<div id="authOverlay" class="auth-overlay hidden">
+  <div class="auth-card">
+    <button id="closeAuth" class="auth-close">✕</button>
+    <div class="auth-icon">✦</div>
+    <h2 class="auth-title">Welcome back</h2>
+    <p class="auth-sub">Sign in to save your clips and access your history.</p>
+    <input id="authEmail" class="auth-input" type="email" placeholder="Email address"/>
+    <input id="authPassword" class="auth-input" type="password" placeholder="Password"/>
+    <p id="authMessage" class="auth-msg"></p>
+    <button id="signInBtn" class="auth-btn-primary">Sign In</button>
+    <button id="signUpBtn" class="auth-btn-outline">Create Free Account</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Speed selector helper (called from HTML)
+function setSpeed(val) {
+  document.getElementById('speed').value = val;
+  document.querySelectorAll('.speed-opt').forEach(b => {
+    b.classList.toggle('active', parseFloat(b.textContent) === val);
+  });
+}
+
+// renderSingle helper (called from clip cards)
+function renderSingle(rank) {
+  const genBtn = document.getElementById('generateSelected');
+  if (genBtn) genBtn.click();
+}
+
+// Animate forge steps based on log messages
+function animateForgeStep(logs) {
+  if (!logs || !logs.length) return;
+  const last = logs[logs.length - 1]?.msg?.toLowerCase() || '';
+  const s1 = document.getElementById('step-fetch-num');
+  const s2 = document.getElementById('step-analyze-num');
+  const s3 = document.getElementById('step-render-num');
+  const b2 = document.getElementById('step-analyze-bar');
+  const b3 = document.getElementById('step-render-bar');
+  if (last.includes('transcript') || last.includes('fetch')) {
+    s1?.classList.add('done'); s2?.classList.add('active');
+    b2?.classList.add('visible');
+    b2?.querySelector('.step-bar-fill')?.style && (b2.querySelector('.step-bar-fill').style.width = '60%');
+  }
+  if (last.includes('gemini') || last.includes('analyz') || last.includes('clip')) {
+    s2?.classList.add('done'); s3?.classList.add('active');
+    b3?.classList.add('visible');
+    b3?.querySelector('.step-bar-fill')?.style && (b3.querySelector('.step-bar-fill').style.width = '50%');
+  }
+  if (last.includes('render') || last.includes('encod') || last.includes('complet')) {
+    s3?.classList.add('done');
+    b3?.querySelector('.step-bar-fill')?.style && (b3.querySelector('.step-bar-fill').style.width = '100%');
+  }
+}
+
+// Patch pollJob to animate steps — hook into forgeLogs updates
+const _origSetInterval = window.setInterval;
+</script>
+<script src="/static/app.js?v=claude-ui-v1"></script>
+</body>
+</html>
