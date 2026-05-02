@@ -18,6 +18,11 @@ const apiYoutube = document.querySelector("#apiYoutube");
 const saveApiBtn = document.querySelector("#saveApiBtn");
 const apiMessage = document.querySelector("#apiMessage");
 
+const urlPreview = document.querySelector("#urlPreview");
+const previewTitle = document.querySelector("#previewTitle");
+const previewThumb = document.querySelector("#previewThumb");
+const previewChannel = document.querySelector("#previewChannel");
+
 const clipList = document.querySelector("#clipList");
 const renderOutput = document.querySelector("#renderOutput");
 const forgeProgressCircle = document.querySelector("#forgeProgressCircle");
@@ -125,19 +130,39 @@ function setSpeed(val) {
 youtubeUrlInput?.addEventListener("input", async (e) => {
     const url = e.target.value.trim();
     const videoId = extractVideoId(url);
-    if (videoId && youtubeApiKey) {
+    
+    if (videoId) {
         urlPreview.classList.remove("hidden");
+        if (!youtubeApiKey) {
+            previewTitle.textContent = "Waiting for API configuration...";
+            return;
+        }
+        
         previewTitle.textContent = "Fetching video details...";
         try {
             const resp = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${youtubeApiKey}`);
             const data = await resp.json();
+            
+            if (data.error) {
+                previewTitle.textContent = "API Key Error: Check YouTube Data API quotas.";
+                previewChannel.textContent = "Error Code: " + data.error.code;
+                console.error("YouTube API Error:", data.error);
+                return;
+            }
+
             if (data.items && data.items.length > 0) {
                 const snip = data.items[0].snippet;
                 previewTitle.textContent = snip.title;
                 previewThumb.src = snip.thumbnails.medium.url;
                 previewChannel.textContent = snip.channelTitle;
+            } else {
+                previewTitle.textContent = "Video not found (Private or Invalid ID)";
+                previewChannel.textContent = "Source Unavailable";
             }
-        } catch (err) { console.error(err); }
+        } catch (err) { 
+            previewTitle.textContent = "Network Error: Unable to reach YouTube";
+            console.error(err); 
+        }
     } else {
         urlPreview.classList.add("hidden");
     }
