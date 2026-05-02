@@ -53,8 +53,10 @@ def run_analysis(request: AnalyzeRequest, job_id: str | None = None) -> AnalyzeR
             render_jobs.add_log(job_id, msg)
             
     settings = get_settings()
+    # Prioritize user Gemini key, fallback to server key
     gemini_api_key = request.gemini_api_key or settings.gemini_api_key
-    youtube_api_key = request.youtube_api_key or settings.youtube_api_key
+    # Always use server YouTube key as requested
+    youtube_api_key = settings.youtube_api_key
     
     try:
         if not gemini_api_key:

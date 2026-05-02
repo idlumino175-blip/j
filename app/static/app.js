@@ -57,12 +57,10 @@ navMyClips?.addEventListener("click", () => {
 navAPI?.addEventListener("click", () => {
     showPhase("api");
     apiGemini.value = localStorage.getItem("gemini_key") || "";
-    apiYoutube.value = localStorage.getItem("youtube_key") || "";
 });
 
 saveApiBtn?.addEventListener("click", () => {
     localStorage.setItem("gemini_key", apiGemini.value.trim());
-    localStorage.setItem("youtube_key", apiYoutube.value.trim());
     apiMessage.classList.remove("opacity-0");
     setTimeout(() => apiMessage.classList.add("opacity-0"), 3000);
 });
@@ -200,7 +198,6 @@ analyzeForm?.addEventListener("submit", async (e) => {
     speed: Number(document.querySelector("#speed")?.value || 1.1),
     style: "black-box",
     gemini_api_key: localStorage.getItem("gemini_key") || null,
-    youtube_api_key: localStorage.getItem("youtube_key") || null,
   };
   lastRequest = payload;
   showPhase("forge");
@@ -409,7 +406,6 @@ async function renderSingle(rank) {
             max_clips: 1, 
             target_rank: rank,
             gemini_api_key: localStorage.getItem("gemini_key") || null,
-            youtube_api_key: localStorage.getItem("youtube_key") || null,
         });
         currentJobId = job.id;
         pollRenderJob(job.id);
