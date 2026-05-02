@@ -51,9 +51,15 @@ let youtubeApiKey = null;
 let fluidProgressVal = 0;
 let fluidProgressInterval = null;
 
-// UI Toggles
-authBtnNav?.addEventListener("click", () => authOverlay.classList.remove("hidden"));
-closeAuth?.addEventListener("click", () => authOverlay.classList.add("hidden"));
+// UI Toggles - ATTACHED IMMEDIATELY
+authBtnNav?.addEventListener("click", () => {
+    console.log("Clipper AI: Opening Auth Overlay...");
+    authOverlay?.classList.remove("hidden");
+});
+
+closeAuth?.addEventListener("click", () => {
+    authOverlay?.classList.add("hidden");
+});
 
 navDashboard?.addEventListener("click", () => showPhase("landing"));
 navMyClips?.addEventListener("click", () => {
@@ -83,30 +89,52 @@ cancelForgeBtn?.addEventListener("click", async () => {
     }
 });
 
-// Firebase Auth
+// Firebase Core
 document.addEventListener("DOMContentLoaded", () => {
-  fetch("/app-config").then(r => r.json()).then(config => {
-    youtubeApiKey = config.youtube_api_key;
-    if (!config.auth_enabled) return;
-    
-    if (firebase.apps.length === 0) {
-        firebase.initializeApp(config.firebase_config);
-    }
-    
-    firebase.auth().onAuthStateChanged(user => {
-      firebaseUser = user;
-      if (user) {
-        authOverlay.classList.add("hidden");
-        authBtnNav?.classList.add("hidden");
-        if (userEmailDisplay) { userEmailDisplay.textContent = user.email; userEmailDisplay.classList.remove("hidden"); }
-        signOutBtn?.classList.remove("hidden");
-      } else {
-        userEmailDisplay?.classList.add("hidden");
-        signOutBtn?.classList.add("hidden");
-        authBtnNav?.classList.remove("hidden");
-      }
+  console.log("Clipper AI: Initializing Suite on", location.hostname);
+
+  fetch("/app-config")
+    .then(r => {
+        if (!r.ok) throw new Error(`HTTP Error ${r.status}: Failed to fetch configuration.`);
+        return r.json();
+    })
+    .then(config => {
+        console.log("Clipper AI: Configuration Loaded. Auth Enabled:", config.auth_enabled);
+        youtubeApiKey = config.youtube_api_key;
+
+        if (!config.auth_enabled) return;
+
+        try {
+            if (firebase.apps.length === 0) {
+                firebase.initializeApp(config.firebase_config);
+            }
+
+            firebase.auth().onAuthStateChanged(user => {
+              firebaseUser = user;
+              if (user) {
+                console.log("Clipper AI: Session Active for", user.email);
+                authOverlay?.classList.add("hidden");
+                authBtnNav?.classList.add("hidden");
+                if (userEmailDisplay) { 
+                    userEmailDisplay.textContent = user.email; 
+                    userEmailDisplay.classList.remove("hidden"); 
+                }
+                signOutBtn?.classList.remove("hidden");
+              } else {
+                console.log("Clipper AI: No active session.");
+                userEmailDisplay?.classList.add("hidden");
+                signOutBtn?.classList.add("hidden");
+                authBtnNav?.classList.remove("hidden");
+              }
+            });
+        } catch (authErr) {
+            console.error("Clipper AI: Firebase Initialization Error:", authErr);
+        }
+    })
+    .catch(err => {
+        console.error("Clipper AI: Critical System Error:", err);
     });
-  });
+});
 });
 
 signInBtn?.addEventListener("click", async () => {
