@@ -16,7 +16,7 @@ class GeminiError(RuntimeError):
 class GeminiClient:
     api_key: str
     model: str = "gemini-3-flash-preview"
-    timeout_sec: int = 60
+    timeout_sec: int = 300
 
     @property
     def endpoint(self) -> str:

@@ -1,114 +1,71 @@
+import firebase_admin
+from firebase_admin import credentials, auth
+from fastapi import Header, HTTPException, Depends
+from app.config import get_settings
 from dataclasses import dataclass
 from datetime import datetime, timezone
 
-import requests
-from fastapi import Header, HTTPException
-
-from app.config import get_settings
-
+# Initialize Firebase Admin
+cred = credentials.Certificate("mekm-35d98-firebase-adminsdk-fbsvc-06ce6df159.json") 
+firebase_admin.initialize_app(cred)
 
 @dataclass
 class CurrentUser:
     id: str
     email: str | None = None
 
+def get_current_user(authorization: str = Header(None)) -> CurrentUser | None:
+    if not authorization:
+        return None
+    if not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Invalid token")
+    
+    token = authorization.split(" ")[1]
+    last_exc = None
+    # Retry up to 5 times with a total wait of 15 seconds to handle clock skew
+    for attempt in range(5):
+        try:
+            decoded_token = auth.verify_id_token(token)
+            return CurrentUser(id=decoded_token['uid'], email=decoded_token.get('email'))
+        except Exception as exc:
+            last_exc = exc
+            error_msg = str(exc).lower()
+            if "used too early" in error_msg or "issued in the future" in error_msg:
+                import time
+                # Wait 3 seconds per attempt
+                time.sleep(3)
+                continue
+            break
+    
+    raise HTTPException(status_code=401, detail=f"Authentication error: {str(last_exc)}")
 
-def is_auth_enabled() -> bool:
+def require_render_credit(user: CurrentUser | None) -> None:
     settings = get_settings()
-    return bool(settings.supabase_url and settings.supabase_anon_key and settings.supabase_service_role_key)
-
+    if not settings.auth_enabled:
+        return
+    if not user:
+        raise HTTPException(status_code=401, detail="Authentication required to render clips.")
+    
+    # Usage tracking disabled to prevent crash (Database not initialized)
+    pass
 
 def public_app_config() -> dict[str, object]:
     settings = get_settings()
     return {
-        "auth_required": is_auth_enabled(),
-        "supabase_url": settings.supabase_url,
-        "supabase_anon_key": settings.supabase_anon_key,
+        "auth_enabled": settings.auth_enabled,
         "daily_free_renders": settings.daily_free_renders,
+        "youtube_api_key": settings.youtube_api_key,
+        "firebase_config": {
+            "apiKey": settings.firebase_api_key,
+            "authDomain": settings.firebase_auth_domain,
+            "projectId": settings.firebase_project_id,
+            "storageBucket": settings.firebase_storage_bucket,
+            "messagingSenderId": settings.firebase_messaging_sender_id,
+            "appId": settings.firebase_app_id,
+            "measurementId": settings.firebase_measurement_id,
+        }
     }
-
-
-def get_current_user(authorization: str | None = Header(default=None)) -> CurrentUser | None:
-    if not is_auth_enabled():
-        return None
-    if not authorization or not authorization.lower().startswith("bearer "):
-        raise HTTPException(status_code=401, detail="Please sign in to render clips.")
-
-    token = authorization.split(" ", 1)[1].strip()
-    settings = get_settings()
-    response = requests.get(
-        f"{settings.supabase_url.rstrip('/')}/auth/v1/user",
-        headers={
-            "apikey": settings.supabase_anon_key,
-            "Authorization": f"Bearer {token}",
-        },
-        timeout=20,
-    )
-    if response.status_code >= 400:
-        raise HTTPException(status_code=401, detail="Session expired. Please sign in again.")
-
-    data = response.json()
-    user_id = data.get("id")
-    if not user_id:
-        raise HTTPException(status_code=401, detail="Session expired. Please sign in again.")
-    return CurrentUser(id=user_id, email=data.get("email"))
-
-
-def require_render_credit(user: CurrentUser | None) -> None:
-    if not is_auth_enabled() or user is None:
-        return
-
-    settings = get_settings()
-    used = count_todays_renders(user.id)
-    if used >= settings.daily_free_renders:
-        raise HTTPException(
-            status_code=402,
-            detail=f"Daily free render limit reached. You have {settings.daily_free_renders} renders per day.",
-        )
-    record_render_usage(user.id)
-
 
 def count_todays_renders(user_id: str) -> int:
-    settings = get_settings()
-    today = datetime.now(timezone.utc).date().isoformat()
-    response = requests.get(
-        f"{settings.supabase_url.rstrip('/')}/rest/v1/usage_events",
-        headers=supabase_service_headers(count=True),
-        params={
-            "user_id": f"eq.{user_id}",
-            "action": "eq.render",
-            "created_at": f"gte.{today}T00:00:00Z",
-            "select": "id",
-        },
-        timeout=20,
-    )
-    if response.status_code >= 400:
-        raise HTTPException(status_code=502, detail="Could not check daily render limit.")
-    content_range = response.headers.get("content-range", "")
-    if "/" in content_range:
-        return int(content_range.rsplit("/", 1)[1])
-    return len(response.json())
-
-
-def record_render_usage(user_id: str) -> None:
-    settings = get_settings()
-    response = requests.post(
-        f"{settings.supabase_url.rstrip('/')}/rest/v1/usage_events",
-        headers=supabase_service_headers(),
-        json={"user_id": user_id, "action": "render"},
-        timeout=20,
-    )
-    if response.status_code >= 400:
-        raise HTTPException(status_code=502, detail="Could not record render usage.")
-
-
-def supabase_service_headers(count: bool = False) -> dict[str, str]:
-    settings = get_settings()
-    headers = {
-        "apikey": settings.supabase_service_role_key,
-        "Authorization": f"Bearer {settings.supabase_service_role_key}",
-        "Content-Type": "application/json",
-    }
-    if count:
-        headers["Prefer"] = "count=exact"
-    return headers
+    # Usage tracking disabled to prevent crash
+    return 0

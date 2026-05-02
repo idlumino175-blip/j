@@ -1,0 +1,1000 @@
+<!-- Landing & Input -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#d9e6da",
+                    "inverse-surface": "#2f3131",
+                    "on-primary": "#ffffff",
+                    "surface": "#f9f9f9",
+                    "primary-fixed": "#dbe3ef",
+                    "surface-tint": "#575f69",
+                    "on-error": "#ffffff",
+                    "primary-container": "#141c24",
+                    "secondary": "#556158",
+                    "on-surface-variant": "#44474b",
+                    "error": "#ba1a1a",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed-variant": "#3f4851",
+                    "on-primary-fixed": "#141c24",
+                    "primary": "#000000",
+                    "primary-fixed-dim": "#bfc7d2",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#f0f1f1",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed-variant": "#474747",
+                    "tertiary-container": "#1b1b1b",
+                    "surface-container-low": "#f3f3f4",
+                    "secondary-fixed-dim": "#bdcabe",
+                    "on-secondary-fixed-variant": "#3e4a41",
+                    "inverse-primary": "#bfc7d2",
+                    "on-primary-container": "#7c858f",
+                    "outline": "#75777b",
+                    "on-surface": "#1a1c1c",
+                    "on-tertiary-container": "#848484",
+                    "surface-bright": "#f9f9f9",
+                    "tertiary-fixed-dim": "#c6c6c6",
+                    "on-secondary-container": "#5b675e",
+                    "on-tertiary-fixed": "#1b1b1b",
+                    "secondary-fixed": "#d9e6da",
+                    "on-secondary-fixed": "#131e17",
+                    "surface-container-high": "#e8e8e8",
+                    "surface-variant": "#e2e2e2",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e2e2e2",
+                    "on-background": "#1a1c1c",
+                    "tertiary": "#000000",
+                    "surface-dim": "#dadada",
+                    "background": "#f9f9f9",
+                    "outline-variant": "#c5c6cb",
+                    "surface-container": "#eeeeee",
+                    "tertiary-fixed": "#e2e2e2",
+                    "error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-max": "1280px",
+                    "unit": "8px",
+                    "gutter": "24px",
+                    "margin-mobile": "16px",
+                    "margin-desktop": "40px"
+            },
+            "fontFamily": {
+                    "h1": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "body-md": ["Inter"],
+                    "h3": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "h2": ["Inter"]
+            },
+            "fontSize": {
+                    "h1": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "h3": ["24px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "h2": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-surface">
+<nav class="fixed top-0 w-full z-50 border-b border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md shadow-sm dark:shadow-none">
+<div class="max-w-[1280px] mx-auto flex justify-between items-center h-16 px-8">
+<div class="text-xl font-black text-slate-900 dark:text-slate-50 font-['Inter'] tracking-tight">Clipper</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-slate-900 dark:text-slate-50 font-semibold border-b-2 border-slate-900 dark:border-slate-50 pb-1 font-['Inter'] tracking-tight hover:text-slate-900 dark:hover:text-slate-100 transition-colors text-slate-500 hover:text-slate-900 font-medium transition-colors" href="#">Dashboard</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium font-['Inter'] tracking-tight hover:text-slate-900 dark:hover:text-slate-100 transition-colors text-slate-500 hover:text-slate-900 font-medium transition-colors" href="#">My Clips</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium font-['Inter'] tracking-tight hover:text-slate-900 dark:hover:text-slate-100 transition-colors text-slate-500 hover:text-slate-900 font-medium transition-colors" href="#">Pricing</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium font-['Inter'] tracking-tight hover:text-slate-900 dark:hover:text-slate-100 transition-colors text-slate-500 hover:text-slate-900 font-medium transition-colors" href="#">API</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-500 dark:text-slate-400 font-medium hover:text-slate-900 transition-colors px-4 py-2">Sign In</button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-semibold hover:opacity-90 transition-opacity">New Clip</button>
+</div>
+</div>
+</nav>
+<main class="pt-32 pb-64 min-h-screen">
+<div class="max-w-[1280px] mx-auto px-8">
+<div class="flex flex-col items-center text-center space-y-12 mb-32">
+<div class="inline-flex items-center gap-2 px-4 py-2 bg-secondary-container rounded-full text-on-secondary-container bg-[#e2ede4] text-[#3e4a41] border border-[#d1e0d4]"><span class="material-symbols-outlined text-[18px] opacity-60" data-icon="auto_awesome">auto_awesome</span><span class="font-label-caps text-[10px] uppercase tracking-[0.2em] opacity-60">Powered by Gemini AI</span></div>
+<div class="space-y-4 max-w-2xl mx-auto">
+<h1 class="font-h1 text-h1 text-primary">Turn long videos into viral moments.</h1>
+<p class="font-body-lg text-body-lg text-secondary max-w-xl mx-auto">Paste your link and let Gemini find the magic. Intelligent video summarization for creators.</p>
+</div>
+<div class="w-full max-w-3xl mx-auto">
+<div class="relative flex flex-col md:flex-row items-center bg-[#f0f4f1] p-2 rounded-full border border-slate-200/50 shadow-sm">
+<div class="flex-1 flex items-center px-6 gap-3">
+<span class="material-symbols-outlined text-slate-400" data-icon="link">link</span>
+<input class="w-full bg-transparent border-none focus:ring-0 py-4 text-body-lg text-slate-600 placeholder-slate-400" placeholder="Paste your video link here..." type="text"/>
+</div>
+<button class="w-full md:w-auto bg-primary text-on-primary px-10 py-4 rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-lg shadow-black/10">
+<span>Analyze</span>
+<span class="material-symbols-outlined text-[20px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<p class="mt-4 text-sm text-slate-400 font-medium italic">Supports YouTube, Vimeo, and more</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
+<div class="bg-white p-10 rounded-lg shadow-sm border border-slate-50 flex flex-col items-start gap-4 bg-white/50 backdrop-blur-sm">
+<div class="w-12 h-12 bg-[#e2ede4] flex items-center justify-center rounded-2xl">
+<span class="material-symbols-outlined text-[#3e4a41]" data-icon="content_cut">content_cut</span>
+</div>
+<h3 class="font-h3 text-h3">Smart Trimming</h3>
+<p class="font-body-md text-body-md text-secondary">Our AI identifies high-engagement moments and automatically crops for vertical formats.</p>
+</div>
+<div class="bg-white p-10 rounded-lg shadow-sm border border-slate-50 flex flex-col items-start gap-4 bg-white/50 backdrop-blur-sm">
+<div class="w-12 h-12 bg-[#e2ede4] flex items-center justify-center rounded-2xl">
+<span class="material-symbols-outlined text-[#3e4a41]" data-icon="closed_caption">closed_caption</span>
+</div>
+<h3 class="font-h3 text-h3">Auto Captions</h3>
+<p class="font-body-md text-body-md text-secondary">Dynamic, high-retention subtitles generated in seconds with perfect timing.</p>
+</div>
+<div class="bg-white p-10 rounded-lg shadow-sm border border-slate-50 flex flex-col items-start gap-4 bg-white/50 backdrop-blur-sm">
+<div class="w-12 h-12 bg-[#e2ede4] flex items-center justify-center rounded-2xl">
+<span class="material-symbols-outlined text-[#3e4a41]" data-icon="trending_up">trending_up</span>
+</div>
+<h3 class="font-h3 text-h3">Viral Prediction</h3>
+<p class="font-body-md text-body-md text-secondary">Gemini analyzes hook strength to predict which clips will perform best on social.</p>
+</div>
+</div>
+<div class="w-full h-[600px] rounded-lg overflow-hidden relative shadow-2xl">
+<img alt="Video Editor Workspace" class="w-full h-full object-cover" data-alt="A clean, minimalist high-end video editing workspace featuring a sleek black laptop with a video timeline interface. The room is filled with soft, natural light and features subtle sage green wall accents. The aesthetic is professional and focused, emphasizing deep charcoal furniture and bright, airy white spaces. Minimalist studio monitors and a designer lamp complete the sophisticated SaaS vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAosV7nMXNy-yxwwZk4p3koHMkYRBUOKLLpbSlXoeA5Ii_RjmaCQ5ZfB9Qvztnla49wyrJkCyTqMa3XEeYWdW3IPOvIJmHV9oWxvLVwWxFigp1KDQUDrvKCWVL-EBZwYgf2Tv5rM-oeOtraLaAdrAI63PJbJnr8UoHvx8nNdTmcRibZ_4bhv3vJPELCMZbNUVky-3mOCZ7e3WBcuRAvdVhZ8HU6zRsv2ymo22Do_iyS_VC3cZrtDe23beWEkQo_tn416MeSlCvhq1cm"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-12">
+<div class="text-white max-w-xl">
+<h2 class="font-h2 text-h2 mb-4">The Professional Choice</h2>
+<p class="font-body-lg text-body-lg opacity-90">Join 10,000+ creators who are saving hundreds of hours every month using Clipper AI's intelligent workflow.</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="w-full py-12 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-950 font-['Inter'] text-sm">
+<div class="max-w-[1280px] mx-auto flex flex-col md:flex-row justify-between items-center px-8 gap-4">
+<div class="font-bold text-slate-900 dark:text-slate-50">Clipper AI</div>
+<div class="flex gap-8 text-slate-400 dark:text-slate-500">
+<a class="hover:text-slate-600 dark:hover:text-slate-300 transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-slate-600 dark:hover:text-slate-300 transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-slate-600 dark:hover:text-slate-300 transition-colors" href="#">Status</a>
+<a class="hover:text-slate-600 dark:hover:text-slate-300 transition-colors" href="#">Contact</a>
+</div>
+<div class="text-slate-400 dark:text-slate-500">
+                © 2024 Clipper AI. Professional Video Intelligence.
+            </div>
+</div>
+</footer>
+</body></html>
+
+<!-- AI Analysis & Selection -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#d9e6da",
+                        "inverse-surface": "#2f3131",
+                        "on-primary": "#ffffff",
+                        "surface": "#f9f9f9",
+                        "primary-fixed": "#dbe3ef",
+                        "surface-tint": "#575f69",
+                        "on-error": "#ffffff",
+                        "primary-container": "#141c24",
+                        "secondary": "#556158",
+                        "on-surface-variant": "#44474b",
+                        "error": "#ba1a1a",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#3f4851",
+                        "on-primary-fixed": "#141c24",
+                        "primary": "#000000",
+                        "primary-fixed-dim": "#bfc7d2",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f0f1f1",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#474747",
+                        "tertiary-container": "#1b1b1b",
+                        "surface-container-low": "#f3f3f4",
+                        "secondary-fixed-dim": "#bdcabe",
+                        "on-secondary-fixed-variant": "#3e4a41",
+                        "inverse-primary": "#bfc7d2",
+                        "on-primary-container": "#7c858f",
+                        "outline": "#75777b",
+                        "on-surface": "#1a1c1c",
+                        "on-tertiary-container": "#848484",
+                        "surface-bright": "#f9f9f9",
+                        "tertiary-fixed-dim": "#c6c6c6",
+                        "on-secondary-container": "#5b675e",
+                        "on-tertiary-fixed": "#1b1b1b",
+                        "secondary-fixed": "#d9e6da",
+                        "on-secondary-fixed": "#131e17",
+                        "surface-container-high": "#e8e8e8",
+                        "surface-variant": "#e2e2e2",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-background": "#1a1c1c",
+                        "tertiary": "#000000",
+                        "surface-dim": "#dadada",
+                        "background": "#f9f9f9",
+                        "outline-variant": "#c5c6cb",
+                        "surface-container": "#eeeeee",
+                        "tertiary-fixed": "#e2e2e2",
+                        "error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1280px",
+                        "unit": "8px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "40px"
+                    },
+                    "fontFamily": {
+                        "h1": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "h3": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h2": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h1": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h3": ["24px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h2": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9f9f9;
+        }
+        .ambient-shadow {
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="text-on-background">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 border-b bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-slate-100 dark:border-slate-800 shadow-sm dark:shadow-none">
+<div class="max-w-[1280px] mx-auto flex justify-between items-center h-16 px-8 font-['Inter'] tracking-tight">
+<div class="text-xl font-black text-slate-900 dark:text-slate-50">Clipper</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">Dashboard</a>
+<a class="text-slate-900 dark:text-slate-50 font-semibold border-b-2 border-slate-900 dark:border-slate-50 pb-1" href="#">My Clips</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">Pricing</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">API</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="hidden md:block text-slate-500 dark:text-slate-400 font-medium hover:text-slate-900">Sign In</button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-semibold hover:opacity-90 transition-opacity">New Clip</button>
+</div>
+</div>
+</header>
+<main class="pt-32 pb-24 max-w-[1280px] mx-auto px-8">
+<!-- Hero / Video Preview Section -->
+<section class="mb-16">
+<div class="flex flex-col md:flex-row gap-12 items-start">
+<div class="w-full md:w-2/3">
+<div class="relative group rounded-lg overflow-hidden bg-black aspect-video ambient-shadow border border-outline-variant/20">
+<img class="w-full h-full object-cover opacity-80" data-alt="A professional cinematic frame of a technology podcast interview. Two people are sitting in high-end ergonomic chairs against a background of soft neon studio lights and acoustic foam panels. The atmosphere is professional and moody, with focused key lighting creating high contrast. The image uses a sophisticated palette of deep charcoals and subtle sage green accents, matching a premium SaaS aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAseD5cWadN3qD7IOFW37pGJkg4LpsdJi5v2-r1Z2NNqaWMFWeDOAnhcMDE0597TrjUpraWQvO-gf_j6wmZ9WxUwFITgdm6-u9Uq-RQ5YFfKbrVzUM4DN1-E3XFNhrwquqeiVuvM9MXHjtmG0wDofmUHwQtRaeJlhW8yOFHU5FCETdWSS3qUUCc5zl1DUWGIn2mRf6qGG0ITvQAQq1_JIiYQB_7R_iogrXm-OS2SwOSIG2d4VGI-NhqSV_a4FMp2I3AVlydSTTiMn_x"/>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<div class="w-20 h-20 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-4xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+<span class="text-white font-label-caps text-label-caps uppercase tracking-widest bg-secondary/40 px-3 py-1 rounded-full backdrop-blur-sm">Original Source</span>
+<h2 class="text-white font-h2 text-h2 mt-2">The Future of AI Intelligence: Deep Dive Interview</h2>
+</div>
+</div>
+</div>
+<div class="w-full md:w-1/3 space-y-6">
+<div class="space-y-2">
+<h1 class="font-h2 text-h2 text-primary">Viral Analysis</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Our AI has scanned your video for high-engagement segments. Review the viral moments below and select which clips to generate for social media.</p>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3 p-4 rounded-xl bg-secondary-container/30 border border-secondary-container">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<div>
+<p class="font-label-caps text-label-caps text-on-secondary-fixed">AI ANALYSIS COMPLETE</p>
+<p class="text-sm font-medium">8 High-potential moments found</p>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-h3 text-body-md py-5 rounded-full hover:shadow-lg transition-all active:scale-[0.98]">
+                            Generate Selected Clips
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Viral Moments Grid -->
+<section>
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="font-h2 text-h2">Viral Moments</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Selected by our multi-modal engagement model</p>
+</div>
+<div class="flex gap-2">
+<button class="p-3 rounded-full bg-surface-container-low text-on-surface-variant border border-outline-variant hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<button class="p-3 rounded-full bg-surface-container-low text-on-surface-variant border border-outline-variant hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined">sort</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="group relative bg-white rounded-lg p-8 ambient-shadow hover:shadow-xl transition-all duration-300 border border-transparent hover:border-secondary-container">
+<div class="absolute top-6 right-8">
+<input checked="" class="w-6 h-6 rounded-full border-outline-variant text-primary focus:ring-secondary cursor-pointer" type="checkbox"/>
+</div>
+<div class="mb-6 flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-secondary bg-secondary-container px-3 py-1 rounded-full">01:20 - 02:05</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-error text-sm" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+<span class="font-bold text-lg">98</span>
+</div>
+</div>
+<h3 class="font-h3 text-h3 mb-4 group-hover:text-secondary transition-colors">The Breakthrough Hook</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">Strong emotional hook with high visual contrast. Perfect for TikTok and Reels start.</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-low text-xs font-semibold rounded-full text-secondary">EMOTIONAL</span>
+<span class="px-3 py-1 bg-surface-container-low text-xs font-semibold rounded-full text-secondary">HIGH_CONTRAST</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group relative bg-white rounded-lg p-8 ambient-shadow hover:shadow-xl transition-all duration-300 border border-transparent hover:border-secondary-container">
+<div class="absolute top-6 right-8">
+<input checked="" class="w-6 h-6 rounded-full border-outline-variant text-primary focus:ring-secondary cursor-pointer" type="checkbox"/>
+</div>
+<div class="mb-6 flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-secondary bg-secondary-container px-3 py-1 rounded-full">05:42 - 06:15</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-error text-sm" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+<span class="font-bold text-lg">92</span>
+</div>
+</div>
+<h3 class="font-h3 text-h3 mb-4 group-hover:text-secondary transition-colors">The Hot Take</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">A controversial opinion that is likely to drive engagement through comments and shares.</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-low text-xs font-semibold rounded-full text-secondary">CONTROVERSIAL</span>
+<span class="px-3 py-1 bg-surface-container-low text-xs font-semibold rounded-full text-secondary">QUOTABLE</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group relative bg-white rounded-lg p-8 ambient-shadow hover:shadow-xl transition-all duration-300 border border-transparent hover:border-secondary-container opacity-60 hover:opacity-100">
+<div class="absolute top-6 right-8">
+<input class="w-6 h-6 rounded-full border-outline-variant text-primary focus:ring-secondary cursor-pointer" type="checkbox"/>
+</div>
+<div class="mb-6 flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-secondary bg-secondary-container px-3 py-1 rounded-full">12:10 - 13:00</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-error text-sm" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+<span class="font-bold text-lg">84</span>
+</div>
+</div>
+<h3 class="font-h3 text-h3 mb-4 group-hover:text-secondary transition-colors">Technical Insight</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">Educational segment explaining complex concepts. High 'Save' potential for LinkedIn.</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-low text-xs font-semibold rounded-full text-secondary">EDUCATIONAL</span>
+<span class="px-3 py-1 bg-surface-container-low text-xs font-semibold rounded-full text-secondary">LINKEDIN</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group relative bg-white rounded-lg p-8 ambient-shadow hover:shadow-xl transition-all duration-300 border border-transparent hover:border-secondary-container">
+<div class="absolute top-6 right-8">
+<input checked="" class="w-6 h-6 rounded-full border-outline-variant text-primary focus:ring-secondary cursor-pointer" type="checkbox"/>
+</div>
+<div class="mb-6 flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-secondary bg-secondary-container px-3 py-1 rounded-full">18:30 - 19:15</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-error text-sm" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+<span class="font-bold text-lg">95</span>
+</div>
+</div>
+<h3 class="font-h3 text-h3 mb-4 group-hover:text-secondary transition-colors">The Prediction</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">Forward-looking statements about the industry. Great for short-form clips.</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-low text-xs font-semibold rounded-full text-secondary">FORECAST</span>
+<span class="px-3 py-1 bg-surface-container-low text-xs font-semibold rounded-full text-secondary">SHORTS</span>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="group relative bg-white rounded-lg p-8 ambient-shadow hover:shadow-xl transition-all duration-300 border border-transparent hover:border-secondary-container">
+<div class="absolute top-6 right-8">
+<input checked="" class="w-6 h-6 rounded-full border-outline-variant text-primary focus:ring-secondary cursor-pointer" type="checkbox"/>
+</div>
+<div class="mb-6 flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-secondary bg-secondary-container px-3 py-1 rounded-full">24:45 - 25:30</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-error text-sm" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+<span class="font-bold text-lg">89</span>
+</div>
+</div>
+<h3 class="font-h3 text-h3 mb-4 group-hover:text-secondary transition-colors">Practical Steps</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">Actionable advice that provides immediate value to the viewer.</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-low text-xs font-semibold rounded-full text-secondary">ACTIONABLE</span>
+<span class="px-3 py-1 bg-surface-container-low text-xs font-semibold rounded-full text-secondary">VALUE</span>
+</div>
+</div>
+<!-- Empty State Card / Upload New -->
+<div class="group relative border-2 border-dashed border-outline-variant rounded-lg p-8 flex flex-col items-center justify-center text-center space-y-4 hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-secondary text-3xl">add</span>
+</div>
+<div>
+<h3 class="font-h3 text-body-lg font-bold">Manual Clip</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Select a custom timestamp to generate a clip manually.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Floating Action Summary Mobile -->
+<div class="md:hidden fixed bottom-8 left-8 right-8 z-40">
+<button class="w-full bg-primary text-on-primary font-h3 text-body-md py-4 rounded-full shadow-2xl flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">video_library</span>
+                Generate 4 Clips
+            </button>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 border-t bg-white dark:bg-slate-950 border-slate-100 dark:border-slate-800">
+<div class="max-w-[1280px] mx-auto flex flex-col md:flex-row justify-between items-center px-8 gap-4 font-['Inter'] text-sm">
+<div class="font-bold text-slate-900 dark:text-slate-50">Clipper AI</div>
+<div class="text-slate-400 dark:text-slate-500 text-center md:text-left">
+                © 2024 Clipper AI. Professional Video Intelligence.
+            </div>
+<div class="flex gap-6">
+<a class="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300" href="#">Privacy Policy</a>
+<a class="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300" href="#">Terms of Service</a>
+<a class="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300" href="#">Status</a>
+<a class="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>
+
+<!-- Final Result -->
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Clipper - Final Result</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-container": "#d9e6da",
+                      "inverse-surface": "#2f3131",
+                      "on-primary": "#ffffff",
+                      "surface": "#f9f9f9",
+                      "primary-fixed": "#dbe3ef",
+                      "surface-tint": "#575f69",
+                      "on-error": "#ffffff",
+                      "primary-container": "#141c24",
+                      "secondary": "#556158",
+                      "on-surface-variant": "#44474b",
+                      "error": "#ba1a1a",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-fixed-variant": "#3f4851",
+                      "on-primary-fixed": "#141c24",
+                      "primary": "#000000",
+                      "primary-fixed-dim": "#bfc7d2",
+                      "on-secondary": "#ffffff",
+                      "inverse-on-surface": "#f0f1f1",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-fixed-variant": "#474747",
+                      "tertiary-container": "#1b1b1b",
+                      "surface-container-low": "#f3f3f4",
+                      "secondary-fixed-dim": "#bdcabe",
+                      "on-secondary-fixed-variant": "#3e4a41",
+                      "inverse-primary": "#bfc7d2",
+                      "on-primary-container": "#7c858f",
+                      "outline": "#75777b",
+                      "on-surface": "#1a1c1c",
+                      "on-tertiary-container": "#848484",
+                      "surface-bright": "#f9f9f9",
+                      "tertiary-fixed-dim": "#c6c6c6",
+                      "on-secondary-container": "#5b675e",
+                      "on-tertiary-fixed": "#1b1b1b",
+                      "secondary-fixed": "#d9e6da",
+                      "on-secondary-fixed": "#131e17",
+                      "surface-container-high": "#e8e8e8",
+                      "surface-variant": "#e2e2e2",
+                      "on-error-container": "#93000a",
+                      "surface-container-highest": "#e2e2e2",
+                      "on-background": "#1a1c1c",
+                      "tertiary": "#000000",
+                      "surface-dim": "#dadada",
+                      "background": "#f9f9f9",
+                      "outline-variant": "#c5c6cb",
+                      "surface-container": "#eeeeee",
+                      "tertiary-fixed": "#e2e2e2",
+                      "error-container": "#ffdad6"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "container-max": "1280px",
+                      "unit": "8px",
+                      "gutter": "24px",
+                      "margin-mobile": "16px",
+                      "margin-desktop": "40px"
+              },
+              "fontFamily": {
+                      "h1": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "body-md": ["Inter"],
+                      "h3": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "h2": ["Inter"]
+              },
+              "fontSize": {
+                      "h1": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "label-caps": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                      "h3": ["24px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "500"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                      "h2": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f9f9f9;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 border-b bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-slate-100 dark:border-slate-800 shadow-sm dark:shadow-none">
+<div class="max-w-[1280px] mx-auto flex justify-between items-center h-16 px-8">
+<div class="text-xl font-black text-slate-900 dark:text-slate-50 font-['Inter'] tracking-tight">Clipper</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">Dashboard</a>
+<a class="text-slate-900 dark:text-slate-50 font-semibold border-b-2 border-slate-900 dark:border-slate-50 pb-1 hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">My Clips</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">Pricing</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-slate-900 dark:hover:text-slate-100 transition-colors" href="#">API</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="px-5 py-2 text-sm font-semibold text-slate-900 dark:text-slate-50 hover:opacity-70 transition-opacity">Sign In</button>
+<button class="px-5 py-2 bg-primary text-on-primary rounded-full text-sm font-bold hover:opacity-90 transition-opacity">New Clip</button>
+</div>
+</div>
+</header>
+<main class="pt-32 pb-64 min-h-screen">
+<div class="max-w-[1280px] mx-auto px-8">
+<!-- Success Header -->
+<div class="mb-16">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full mb-4">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span class="font-label-caps text-label-caps uppercase tracking-widest">Processing Complete</span>
+</div>
+<h1 class="font-h1 text-h1 text-primary">Your Clip is Ready</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mt-4">AI-optimized vertical format is finalized. Your content is now tailored for high-engagement platforms with professional-grade color grading and noise reduction.</p>
+</div>
+<!-- Result Section: Asymmetric Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+<!-- 9:16 Video Player Preview -->
+<div class="lg:col-span-7 flex justify-center">
+<div class="relative group aspect-[9/16] w-full max-w-[400px] bg-black rounded-lg overflow-hidden shadow-2xl border-4 border-white">
+<img class="w-full h-full object-cover opacity-90" data-alt="A vertical 9:16 video frame showcasing a professional cinematic shot of a modern city at night. The lighting is moody with neon blue and purple accents reflecting off sleek glass surfaces. The visual style is crisp, high-definition, and professional, maintaining a minimalist aesthetic within the solid black video player container. Soft charcoal shadows ground the preview in a clean, modern workspace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7U_C-A5aaRj9EvQCNSPmHBUwhWT3KocHvvtSyEvltuYBBWQu-lVn-q8GLCKpLjLxg8yYa5XroMzeg_ZFr_57T9NoVGL6ze41whpk1xR--aHMSsKl4QC3ky-vxTzvNSgG46KXtqfvXeg5NTmKasndOtq4-Z09uVOuv4E5eKt1FbYnuQfSSZTpzqYwSppZZ8ffEJP45YQrNjpP3ITjkOVw2qpKfgvWwH2Lpcouz8HypHjZwo-HeJeCYZu0cRBnVJ9gRct_fiSAJsWUx"/>
+<!-- Video Controls Overlay (Hover) -->
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-all flex items-center justify-center">
+<div class="w-16 h-16 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-white text-4xl" data-weight="fill">play_arrow</span>
+</div>
+</div>
+<!-- Bottom Progress Bar -->
+<div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+<div class="h-1 w-full bg-white/20 rounded-full overflow-hidden">
+<div class="h-full bg-secondary-container w-2/3"></div>
+</div>
+<div class="flex justify-between mt-2 text-[10px] text-white/70 font-mono">
+<span>00:42</span>
+<span>01:15</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Panel -->
+<div class="lg:col-span-5 space-y-8">
+<div class="bg-white rounded-lg p-10 shadow-[0_4px_24px_rgba(0,0,0,0.04)]">
+<div class="space-y-6">
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase">Export Settings</label>
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">hd</span>
+<span class="font-body-md text-body-md">Ultra High Definition</span>
+</div>
+<span class="font-body-md text-body-md font-bold text-secondary">4K</span>
+</div>
+</div>
+<div class="grid grid-cols-1 gap-4">
+<!-- Primary Action -->
+<button class="w-full py-5 bg-primary text-on-primary rounded-full font-h3 text-h3 flex items-center justify-center gap-3 hover:opacity-90 transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined">download</span>
+                                    Download HD
+                                </button>
+<!-- Secondary Action -->
+<button class="w-full py-5 bg-secondary-container text-on-secondary-container border border-outline-variant/30 rounded-full font-h3 text-h3 flex items-center justify-center gap-3 hover:bg-secondary-fixed transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined">content_copy</span>
+                                    Copy Link
+                                </button>
+</div>
+</div>
+<div class="mt-10 pt-8 border-t border-surface-variant">
+<h3 class="font-h3 text-h3 text-primary mb-4">Share to Socials</h3>
+<div class="flex gap-4">
+<button class="p-4 bg-surface rounded-full text-secondary hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined">share_reviews</span>
+</button>
+<button class="p-4 bg-surface rounded-full text-secondary hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined">bolt</span>
+</button>
+<button class="p-4 bg-surface rounded-full text-secondary hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined">movie_edit</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Notification Card -->
+<div class="bg-secondary-container/30 border border-secondary-container rounded-lg p-6 flex gap-4">
+<span class="material-symbols-outlined text-secondary">info</span>
+<div>
+<p class="font-body-md text-body-md text-on-secondary-container font-medium">Auto-Archiving</p>
+<p class="font-body-md text-[14px] text-on-secondary-container/80 mt-1">This link will expire in 7 days. Ensure you download your high-resolution assets before the expiration date.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Recommended Next Steps (Bento Layout) -->
+<div class="mt-32">
+<h2 class="font-h2 text-h2 text-primary mb-10">Next Actions</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="md:col-span-2 bg-white p-10 rounded-lg shadow-[0_4px_24px_rgba(0,0,0,0.04)] flex flex-col justify-between min-h-[320px]">
+<div>
+<span class="material-symbols-outlined text-4xl text-secondary mb-4">auto_awesome</span>
+<h3 class="font-h3 text-h3 text-primary">Generate Subtitles</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Add professional, dynamic captions to your vertical clip to increase retention by 40%.</p>
+</div>
+<div class="mt-8">
+<button class="font-body-md font-bold text-primary flex items-center gap-2 group">
+                                Start Auto-Captioning
+                                <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="bg-primary-container p-10 rounded-lg shadow-[0_4px_24px_rgba(0,0,0,0.1)] text-white flex flex-col justify-between">
+<div>
+<span class="material-symbols-outlined text-4xl text-on-primary-container mb-4">analytics</span>
+<h3 class="font-h3 text-h3">Clip Analytics</h3>
+<p class="font-body-md text-body-md text-on-primary-container mt-2">Predict your reach before you post.</p>
+</div>
+<div class="mt-8">
+<span class="px-4 py-2 bg-white/10 rounded-full text-xs font-bold uppercase tracking-widest">Premium Only</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 border-t bg-white dark:bg-slate-950 border-slate-100 dark:border-slate-800">
+<div class="max-w-[1280px] mx-auto flex flex-col md:flex-row justify-between items-center px-8 gap-4 font-['Inter'] text-sm">
+<div class="font-bold text-slate-900 dark:text-slate-50">Clipper</div>
+<div class="text-slate-400 dark:text-slate-500">© 2024 Clipper AI. Professional Video Intelligence.</div>
+<div class="flex gap-8">
+<a class="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300" href="#">Privacy Policy</a>
+<a class="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300" href="#">Terms of Service</a>
+<a class="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300" href="#">Status</a>
+<a class="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>
+
+<!-- The Forge (Rendering) -->
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#d9e6da",
+                    "inverse-surface": "#2f3131",
+                    "on-primary": "#ffffff",
+                    "surface": "#f9f9f9",
+                    "primary-fixed": "#dbe3ef",
+                    "surface-tint": "#575f69",
+                    "on-error": "#ffffff",
+                    "primary-container": "#141c24",
+                    "secondary": "#556158",
+                    "on-surface-variant": "#44474b",
+                    "error": "#ba1a1a",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed-variant": "#3f4851",
+                    "on-primary-fixed": "#141c24",
+                    "primary": "#000000",
+                    "primary-fixed-dim": "#bfc7d2",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#f0f1f1",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed-variant": "#474747",
+                    "tertiary-container": "#1b1b1b",
+                    "surface-container-low": "#f3f3f4",
+                    "secondary-fixed-dim": "#bdcabe",
+                    "on-secondary-fixed-variant": "#3e4a41",
+                    "inverse-primary": "#bfc7d2",
+                    "on-primary-container": "#7c858f",
+                    "outline": "#75777b",
+                    "on-surface": "#1a1c1c",
+                    "on-tertiary-container": "#848484",
+                    "surface-bright": "#f9f9f9",
+                    "tertiary-fixed-dim": "#c6c6c6",
+                    "on-secondary-container": "#5b675e",
+                    "on-tertiary-fixed": "#1b1b1b",
+                    "secondary-fixed": "#d9e6da",
+                    "on-secondary-fixed": "#131e17",
+                    "surface-container-high": "#e8e8e8",
+                    "surface-variant": "#e2e2e2",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e2e2e2",
+                    "on-background": "#1a1c1c",
+                    "tertiary": "#000000",
+                    "surface-dim": "#dadada",
+                    "background": "#f9f9f9",
+                    "outline-variant": "#c5c6cb",
+                    "surface-container": "#eeeeee",
+                    "tertiary-fixed": "#e2e2e2",
+                    "error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-max": "1280px",
+                    "unit": "8px",
+                    "gutter": "24px",
+                    "margin-mobile": "16px",
+                    "margin-desktop": "40px"
+            },
+            "fontFamily": {
+                    "h1": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "body-md": ["Inter"],
+                    "h3": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "h2": ["Inter"]
+            },
+            "fontSize": {
+                    "h1": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "h3": ["24px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "h2": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-background selection:bg-secondary-container">
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 border-b border-slate-100 bg-white/80 backdrop-blur-md shadow-sm">
+<div class="max-w-[1280px] mx-auto flex justify-between items-center h-16 px-8">
+<div class="text-xl font-black text-slate-900 font-h1">Clipper</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-slate-500 font-medium hover:text-slate-900 transition-colors font-body-md" href="#">Dashboard</a>
+<a class="text-slate-900 font-semibold border-b-2 border-slate-900 pb-1 font-body-md" href="#">My Clips</a>
+<a class="text-slate-500 font-medium hover:text-slate-900 transition-colors font-body-md" href="#">Pricing</a>
+<a class="text-slate-500 font-medium hover:text-slate-900 transition-colors font-body-md" href="#">API</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-500 hover:text-slate-900 font-medium transition-colors font-body-md px-4 py-2">Sign In</button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-medium hover:opacity-90 transition-opacity font-body-md">New Clip</button>
+</div>
+</div>
+</nav>
+<!-- Main Canvas -->
+<main class="pt-32 pb-64 min-h-screen flex flex-col items-center justify-center">
+<div class="max-w-[1280px] w-full px-8 flex flex-col items-center">
+<!-- Forge Rendering Container -->
+<div class="w-full max-w-2xl bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-12 md:p-16 flex flex-col items-center relative overflow-hidden">
+<!-- Abstract Background Ornament -->
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-secondary-container/30 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-24 -left-24 w-64 h-64 bg-secondary-container/20 rounded-full blur-3xl"></div>
+<!-- Progress Ring Section -->
+<div class="relative w-64 h-64 flex items-center justify-center mb-12">
+<!-- Progress Background -->
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-high" cx="128" cy="128" fill="transparent" r="110" stroke="currentColor" stroke-width="8"></circle>
+<!-- Active Progress (Sage Green) -->
+<circle class="text-secondary transition-all duration-1000 ease-out" cx="128" cy="128" fill="transparent" r="110" stroke="currentColor" stroke-dasharray="691" stroke-dashoffset="240" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<!-- Inner Content -->
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-h1 text-h1 text-primary">65%</span>
+<span class="font-label-caps text-label-caps text-on-secondary-container tracking-widest mt-2">PROCESSING</span>
+</div>
+</div>
+<!-- Status Text -->
+<div class="text-center mb-16">
+<h1 class="font-h2 text-h2 text-primary mb-4">Forging your clips...</h1>
+<p class="font-body-lg text-body-lg text-secondary max-w-md mx-auto">Our AI engine is analyzing your footage to extract the most engaging viral moments.</p>
+</div>
+<!-- Status Steps -->
+<div class="w-full space-y-6">
+<!-- Step 1: Completed -->
+<div class="flex items-center gap-6 p-4 rounded-lg bg-secondary-container/20 border border-secondary-container/50">
+<div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[20px]" data-icon="check">check</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md font-semibold text-primary">Downloading video</p>
+<p class="text-sm text-secondary">Source: YouTube (4k Resolution)</p>
+</div>
+<span class="text-xs font-bold text-secondary uppercase tracking-wider">DONE</span>
+</div>
+<!-- Step 2: Active -->
+<div class="flex items-center gap-6 p-4 rounded-lg bg-white border border-secondary-container ring-2 ring-secondary/10">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px] animate-pulse" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md font-semibold text-primary">Extracting viral moments</p>
+<p class="text-sm text-secondary">Analyzing sentiment and high-energy segments...</p>
+</div>
+<div class="flex gap-1">
+<div class="w-1.5 h-1.5 bg-secondary rounded-full animate-bounce"></div>
+<div class="w-1.5 h-1.5 bg-secondary rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+<div class="w-1.5 h-1.5 bg-secondary rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+</div>
+</div>
+<!-- Step 3: Pending -->
+<div class="flex items-center gap-6 p-4 rounded-lg bg-surface border border-surface-container-highest opacity-60">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" data-icon="crop_portrait">crop_portrait</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md font-medium text-on-surface-variant">Centering for vertical view</p>
+<p class="text-sm text-on-surface-variant/70">Subject tracking for 9:16 aspect ratio</p>
+</div>
+<span class="text-xs font-bold text-on-surface-variant/40 uppercase tracking-wider">WAITING</span>
+</div>
+</div>
+<!-- Subtle Preview Shadow Card -->
+<div class="mt-12 w-full h-40 rounded-lg bg-black overflow-hidden relative group">
+<img class="w-full h-full object-cover opacity-40 grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="A cinematic, low-angle shot of a person sitting in a modern, darkened video editing suite with multiple large glowing monitors. The screens display professional video editing software with complex timelines and waveform visualizations. The atmosphere is focused and professional, with cool blue and charcoal tones highlighting the high-tech equipment. The lighting is moody, casting soft shadows across the sleek, minimalist desk setup." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDe1ntlctwNPQ5umyPbQG6K3d3V0uYk77KxPBuqX852d0xiK0NlrhHb8pAhFIP0I9TIBn3exVXsoH8QEV1IX-yaoO9XiVTJkdNaJNfmLL2Fi8j3jdDQNTAuh-kI581hNiqYpESKQ3D-ZrsT40fgzuEzEqIcOLZjT9oT-2kMgj9EFyUscBbywbcdHBcoonQ35lkj4dtTq3WZK7ZxDoBSBqUv-SsLk1K0Dsr_ezwkMqbbVOD5ADj4N-CUtBLHieG8U2NhqP6BHaXOUFy9"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+<p class="text-white text-sm font-medium">Live AI Rendering Preview</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Contextual Info (Post-canvas) -->
+<div class="mt-12 flex flex-col md:flex-row gap-8 w-full max-w-4xl">
+<div class="flex-1 p-8 rounded-lg bg-white shadow-sm border border-slate-50">
+<span class="material-symbols-outlined text-secondary mb-4" data-icon="bolt">bolt</span>
+<h3 class="font-h3 text-h3 text-primary mb-2">High Priority Rendering</h3>
+<p class="text-secondary">Your clips are being processed on our Tier-1 GPU cluster for maximum speed and accuracy.</p>
+</div>
+<div class="flex-1 p-8 rounded-lg bg-white shadow-sm border border-slate-50">
+<span class="material-symbols-outlined text-secondary mb-4" data-icon="notifications_active">notifications_active</span>
+<h3 class="font-h3 text-h3 text-primary mb-2">Email Notification</h3>
+<p class="text-secondary">Feel free to navigate away. We'll send you an email as soon as your clips are ready for review.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 border-t border-slate-100 bg-white">
+<div class="max-w-[1280px] mx-auto flex flex-col md:flex-row justify-between items-center px-8 gap-4">
+<div class="font-bold text-slate-900 font-h3">Clipper</div>
+<div class="text-slate-400 font-body-md text-sm">© 2024 Clipper AI. Professional Video Intelligence.</div>
+<div class="flex gap-6">
+<a class="text-slate-400 hover:text-slate-600 transition-colors font-body-md text-sm" href="#">Privacy Policy</a>
+<a class="text-slate-400 hover:text-slate-600 transition-colors font-body-md text-sm" href="#">Terms of Service</a>
+<a class="text-slate-400 hover:text-slate-600 transition-colors font-body-md text-sm" href="#">Status</a>
+<a class="text-slate-400 hover:text-slate-600 transition-colors font-body-md text-sm" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>

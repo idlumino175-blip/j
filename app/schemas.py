@@ -22,6 +22,8 @@ class RenderRequest(AnalyzeRequest):
     start_rank: int = Field(default=1, ge=1, le=25)
     speed: float = Field(default=1.1, ge=0.75, le=2.0)
     target_rank: int | None = Field(default=None, ge=1, le=25)
+    style: str = Field(default="blur")
+    add_hook_title: bool = Field(default=False)
 
 
 class VideoMetadata(BaseModel):

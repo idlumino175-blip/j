@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#d9e6da",
+                        "inverse-surface": "#2f3131",
+                        "on-primary": "#ffffff",
+                        "surface": "#f9f9f9",
+                        "primary-fixed": "#dbe3ef",
+                        "surface-tint": "#575f69",
+                        "on-error": "#ffffff",
+                        "primary-container": "#141c24",
+                        "secondary": "#556158",
+                        "on-surface-variant": "#44474b",
+                        "error": "#ba1a1a",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#3f4851",
+                        "on-primary-fixed": "#141c24",
+                        "primary": "#000000",
+                        "primary-fixed-dim": "#bfc7d2",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f0f1f1",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#474747",
+                        "tertiary-container": "#1b1b1b",
+                        "surface-container-low": "#f3f3f4",
+                        "secondary-fixed-dim": "#bdcabe",
+                        "on-secondary-fixed-variant": "#3e4a41",
+                        "inverse-primary": "#bfc7d2",
+                        "on-primary-container": "#7c858f",
+                        "outline": "#75777b",
+                        "on-surface": "#1a1c1c",
+                        "on-tertiary-container": "#848484",
+                        "surface-bright": "#f9f9f9",
+                        "tertiary-fixed-dim": "#c6c6c6",
+                        "on-secondary-container": "#5b675e",
+                        "on-tertiary-fixed": "#1b1b1b",
+                        "secondary-fixed": "#d9e6da",
+                        "on-secondary-fixed": "#131e17",
+                        "surface-container-high": "#e8e8e8",
+                        "surface-variant": "#e2e2e2",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-background": "#1a1c1c",
+                        "tertiary": "#000000",
+                        "surface-dim": "#dadada",
+                        "background": "#f9f9f9",
+                        "outline-variant": "#c5c6cb",
+                        "surface-container": "#eeeeee",
+                        "tertiary-fixed": "#e2e2e2",
+                        "error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1280px",
+                        "unit": "8px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "40px"
+                    },
+                    "fontFamily": {
+                        "h1": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "h3": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h2": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h1": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h3": ["24px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h2": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9f9f9;
+        }
+        .ambient-shadow {
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: currentColor;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 2px;
+        }
+        .nav-link:hover::after {
+            width: 12px;
+        }
+        .nav-link.active::after {
+            width: 12px;
+        }
+    </style>
+</head>
+<body class="text-on-background">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl border-b border-outline-variant/30">
+<div class="max-w-[1280px] mx-auto flex justify-between items-center h-20 px-8">
+<div class="flex items-center gap-2"><div class="w-9 h-9 bg-primary rounded-xl flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-white text-xl" style="font-variation-settings: 'wght' 600;">movie_edit</span>
+</div>
+<span class="text-xl font-bold tracking-tight text-primary uppercase">Clipper</span></div>
+<nav class="hidden md:flex items-center gap-10"><a class="nav-link text-on-surface-variant/80 font-medium text-sm hover:text-primary transition-all duration-300" href="#">Dashboard</a>
+<a class="nav-link active text-primary font-semibold text-sm" href="#">My Clips</a>
+<a class="nav-link text-on-surface-variant/80 font-medium text-sm hover:text-primary transition-all duration-300" href="#">Pricing</a>
+<a class="nav-link text-on-surface-variant/80 font-medium text-sm hover:text-primary transition-all duration-300" href="#">API</a></nav>
+<div class="flex items-center gap-6">
+<button class="hidden md:block text-on-surface-variant font-medium text-sm hover:text-primary transition-colors">Sign In</button>
+<button class="bg-gradient-to-tr from-primary to-neutral-800 text-on-primary px-7 py-2.5 rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all duration-300 active:scale-95">
+  New Clip
+</button>
+</div>
+</div>
+</header>
+<main class="pt-36 pb-24 max-w-[1280px] mx-auto px-8">
+<!-- Hero / Video Preview Section -->
+<section class="mb-16">
+<div class="flex flex-col md:flex-row gap-12 items-start">
+<div class="w-full md:w-2/3">
+<div class="relative group rounded-lg overflow-hidden bg-black aspect-video ambient-shadow border border-outline-variant/20">
+<img alt="The Future of AI Intelligence: Deep Dive Interview" class="w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAseD5cWadN3qD7IOFW37pGJkg4LpsdJi5v2-r1Z2NNqaWMFWeDOAnhcMDE0597TrjUpraWQvO-gf_j6wmZ9WxUwFITgdm6-u9Uq-RQ5YFfKbrVzUM4DN1-E3XFNhrwquqeiVuvM9MXHjtmG0wDofmUHwQtRaeJlhW8yOFHU5FCETdWSS3qUUCc5zl1DUWGIn2mRf6qGG0ITvQAQq1_JIiYQB_7R_iogrXm-OS2SwOSIG2d4VGI-NhqSV_a4FMp2I3AVlydSTTiMn_x"/>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<div class="w-20 h-20 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center cursor-pointer hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-white text-4xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+<span class="text-white font-label-caps text-label-caps uppercase tracking-widest bg-white/10 px-3 py-1 rounded-full backdrop-blur-md border border-white/20">Original Source</span>
+<h2 class="text-white font-h2 text-h2 mt-3">The Future of AI Intelligence: Deep Dive Interview</h2>
+</div>
+</div>
+</div>
+<div class="w-full md:w-1/3 space-y-6">
+<div class="space-y-4">
+<h1 class="font-h1 text-h2 text-primary">Viral Analysis</h1>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">Our AI has scanned your video for high-engagement segments. Review the viral moments below and select which clips to generate for social media.</p>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-4 p-5 rounded-2xl bg-surface-container border border-outline-variant/30">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div>
+<p class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-widest">AI ANALYSIS COMPLETE</p>
+<p class="text-sm font-semibold">8 High-potential moments found</p>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-semibold text-body-md py-5 rounded-full hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-[0.98]">
+                            Generate Selected Clips
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Viral Moments Grid -->
+<section>
+<div class="flex justify-between items-end mb-10">
+<div>
+<h2 class="font-h2 text-h2 tracking-tight">Viral Moments</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Selected by our multi-modal engagement model</p>
+</div>
+<div class="flex gap-3">
+<button class="p-3 rounded-full bg-white text-on-surface-variant border border-outline-variant/50 hover:bg-surface-container-low transition-colors shadow-sm">
+<span class="material-symbols-outlined text-xl">filter_list</span>
+</button>
+<button class="p-3 rounded-full bg-white text-on-surface-variant border border-outline-variant/50 hover:bg-surface-container-low transition-colors shadow-sm">
+<span class="material-symbols-outlined text-xl">sort</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="group relative bg-white rounded-2xl p-8 ambient-shadow hover:shadow-2xl transition-all duration-300 border border-outline-variant/20 hover:border-secondary/30">
+<div class="absolute top-8 right-8">
+<input checked="" class="w-6 h-6 rounded-full border-outline-variant text-primary focus:ring-primary cursor-pointer transition-transform group-hover:scale-110" type="checkbox"/>
+</div>
+<div class="mb-6 flex items-center justify-between">
+<span class="font-label-caps text-[11px] text-secondary bg-secondary-container/50 px-3 py-1 rounded-full uppercase tracking-wider">01:20 - 02:05</span>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-error text-lg" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+<span class="font-bold text-lg text-primary">98</span>
+</div>
+</div>
+<h3 class="font-h3 text-h3 mb-4 group-hover:text-primary transition-colors">The Breakthrough Hook</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 line-clamp-2">Strong emotional hook with high visual contrast. Perfect for TikTok and Reels start.</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-low text-[10px] font-bold rounded-full text-on-surface-variant uppercase tracking-wider">EMOTIONAL</span>
+<span class="px-3 py-1 bg-surface-container-low text-[10px] font-bold rounded-full text-on-surface-variant uppercase tracking-wider">HIGH_CONTRAST</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group relative bg-white rounded-2xl p-8 ambient-shadow hover:shadow-2xl transition-all duration-300 border border-outline-variant/20 hover:border-secondary/30">
+<div class="absolute top-8 right-8">
+<input checked="" class="w-6 h-6 rounded-full border-outline-variant text-primary focus:ring-primary cursor-pointer transition-transform group-hover:scale-110" type="checkbox"/>
+</div>
+<div class="mb-6 flex items-center justify-between">
+<span class="font-label-caps text-[11px] text-secondary bg-secondary-container/50 px-3 py-1 rounded-full uppercase tracking-wider">05:42 - 06:15</span>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-error text-lg" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+<span class="font-bold text-lg text-primary">92</span>
+</div>
+</div>
+<h3 class="font-h3 text-h3 mb-4 group-hover:text-primary transition-colors">The Hot Take</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 line-clamp-2">A controversial opinion that is likely to drive engagement through comments and shares.</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-low text-[10px] font-bold rounded-full text-on-surface-variant uppercase tracking-wider">CONTROVERSIAL</span>
+<span class="px-3 py-1 bg-surface-container-low text-[10px] font-bold rounded-full text-on-surface-variant uppercase tracking-wider">QUOTABLE</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group relative bg-white rounded-2xl p-8 ambient-shadow hover:shadow-2xl transition-all duration-300 border border-outline-variant/20 hover:border-secondary/30 opacity-70 hover:opacity-100">
+<div class="absolute top-8 right-8">
+<input class="w-6 h-6 rounded-full border-outline-variant text-primary focus:ring-primary cursor-pointer transition-transform group-hover:scale-110" type="checkbox"/>
+</div>
+<div class="mb-6 flex items-center justify-between">
+<span class="font-label-caps text-[11px] text-secondary bg-secondary-container/50 px-3 py-1 rounded-full uppercase tracking-wider">12:10 - 13:00</span>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-error text-lg" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+<span class="font-bold text-lg text-primary">84</span>
+</div>
+</div>
+<h3 class="font-h3 text-h3 mb-4 group-hover:text-primary transition-colors">Technical Insight</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 line-clamp-2">Educational segment explaining complex concepts. High 'Save' potential for LinkedIn.</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-low text-[10px] font-bold rounded-full text-on-surface-variant uppercase tracking-wider">EDUCATIONAL</span>
+<span class="px-3 py-1 bg-surface-container-low text-[10px] font-bold rounded-full text-on-surface-variant uppercase tracking-wider">LINKEDIN</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group relative bg-white rounded-2xl p-8 ambient-shadow hover:shadow-2xl transition-all duration-300 border border-outline-variant/20 hover:border-secondary/30">
+<div class="absolute top-8 right-8">
+<input checked="" class="w-6 h-6 rounded-full border-outline-variant text-primary focus:ring-primary cursor-pointer transition-transform group-hover:scale-110" type="checkbox"/>
+</div>
+<div class="mb-6 flex items-center justify-between">
+<span class="font-label-caps text-[11px] text-secondary bg-secondary-container/50 px-3 py-1 rounded-full uppercase tracking-wider">18:30 - 19:15</span>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-error text-lg" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+<span class="font-bold text-lg text-primary">95</span>
+</div>
+</div>
+<h3 class="font-h3 text-h3 mb-4 group-hover:text-primary transition-colors">The Prediction</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 line-clamp-2">Forward-looking statements about the industry. Great for short-form clips.</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-low text-[10px] font-bold rounded-full text-on-surface-variant uppercase tracking-wider">FORECAST</span>
+<span class="px-3 py-1 bg-surface-container-low text-[10px] font-bold rounded-full text-on-surface-variant uppercase tracking-wider">SHORTS</span>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="group relative bg-white rounded-2xl p-8 ambient-shadow hover:shadow-2xl transition-all duration-300 border border-outline-variant/20 hover:border-secondary/30">
+<div class="absolute top-8 right-8">
+<input checked="" class="w-6 h-6 rounded-full border-outline-variant text-primary focus:ring-primary cursor-pointer transition-transform group-hover:scale-110" type="checkbox"/>
+</div>
+<div class="mb-6 flex items-center justify-between">
+<span class="font-label-caps text-[11px] text-secondary bg-secondary-container/50 px-3 py-1 rounded-full uppercase tracking-wider">24:45 - 25:30</span>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-error text-lg" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+<span class="font-bold text-lg text-primary">89</span>
+</div>
+</div>
+<h3 class="font-h3 text-h3 mb-4 group-hover:text-primary transition-colors">Practical Steps</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 line-clamp-2">Actionable advice that provides immediate value to the viewer.</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-low text-[10px] font-bold rounded-full text-on-surface-variant uppercase tracking-wider">ACTIONABLE</span>
+<span class="px-3 py-1 bg-surface-container-low text-[10px] font-bold rounded-full text-on-surface-variant uppercase tracking-wider">VALUE</span>
+</div>
+</div>
+<!-- Manual Clip Card -->
+<div class="group relative border-2 border-dashed border-outline-variant/50 rounded-2xl p-8 flex flex-col items-center justify-center text-center space-y-4 hover:bg-white hover:border-secondary/50 transition-all cursor-pointer ambient-shadow">
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center group-hover:scale-110 group-hover:bg-secondary-container transition-all text-secondary">
+<span class="material-symbols-outlined text-3xl">add</span>
+</div>
+<div>
+<h3 class="font-semibold text-lg">Manual Clip</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Select a custom timestamp to generate a clip manually.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Floating Action Summary Mobile -->
+<div class="md:hidden fixed bottom-8 left-8 right-8 z-40">
+<button class="w-full bg-primary text-on-primary font-semibold text-body-md py-4 rounded-full shadow-2xl flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">video_library</span>
+                Generate 4 Clips
+            </button>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-16 border-t bg-white border-outline-variant/20">
+<div class="max-w-[1280px] mx-auto flex flex-col md:flex-row justify-between items-center px-8 gap-10 font-['Inter'] text-sm">
+<div class="flex flex-col items-center md:items-start gap-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 bg-primary rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-xs">movie_edit</span>
+</div>
+<span class="font-bold text-primary tracking-tight uppercase">Clipper AI</span>
+</div>
+<div class="text-on-surface-variant/70 text-center md:text-left">
+                    © 2024 Clipper AI. Professional Video Intelligence for content creators.
+                </div>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-medium" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-medium" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-medium" href="#">Status</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-medium" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#d9e6da",
+                    "inverse-surface": "#2f3131",
+                    "on-primary": "#ffffff",
+                    "surface": "#f9f9f9",
+                    "primary-fixed": "#dbe3ef",
+                    "surface-tint": "#575f69",
+                    "on-error": "#ffffff",
+                    "primary-container": "#141c24",
+                    "secondary": "#556158",
+                    "on-surface-variant": "#44474b",
+                    "error": "#ba1a1a",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed-variant": "#3f4851",
+                    "on-primary-fixed": "#141c24",
+                    "primary": "#000000",
+                    "primary-fixed-dim": "#bfc7d2",
+                    "on-secondary": "#ffffff",
+                    "inverse-on-surface": "#f0f1f1",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed-variant": "#474747",
+                    "tertiary-container": "#1b1b1b",
+                    "surface-container-low": "#f3f3f4",
+                    "secondary-fixed-dim": "#bdcabe",
+                    "on-secondary-fixed-variant": "#3e4a41",
+                    "inverse-primary": "#bfc7d2",
+                    "on-primary-container": "#7c858f",
+                    "outline": "#75777b",
+                    "on-surface": "#1a1c1c",
+                    "on-tertiary-container": "#848484",
+                    "surface-bright": "#f9f9f9",
+                    "tertiary-fixed-dim": "#c6c6c6",
+                    "on-secondary-container": "#5b675e",
+                    "on-tertiary-fixed": "#1b1b1b",
+                    "secondary-fixed": "#d9e6da",
+                    "on-secondary-fixed": "#131e17",
+                    "surface-container-high": "#e8e8e8",
+                    "surface-variant": "#e2e2e2",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e2e2e2",
+                    "on-background": "#1a1c1c",
+                    "tertiary": "#000000",
+                    "surface-dim": "#dadada",
+                    "background": "#f9f9f9",
+                    "outline-variant": "#c5c6cb",
+                    "surface-container": "#eeeeee",
+                    "tertiary-fixed": "#e2e2e2",
+                    "error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-max": "1280px",
+                    "unit": "8px",
+                    "gutter": "24px",
+                    "margin-mobile": "16px",
+                    "margin-desktop": "40px"
+            },
+            "fontFamily": {
+                    "h1": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "body-md": ["Inter"],
+                    "h3": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "h2": ["Inter"]
+            },
+            "fontSize": {
+                    "h1": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "h3": ["24px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "h2": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f9f9f9;
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #000;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .nav-link.active::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-background selection:bg-secondary-container">
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 border-b border-surface-container-high bg-white/70 backdrop-blur-xl">
+<div class="max-w-[1280px] mx-auto flex justify-between items-center h-20 px-10">
+<div class="flex items-center gap-2"><div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center"><span class="material-symbols-outlined text-white text-[20px]" data-icon="auto_awesome">auto_awesome</span></div><div class="text-xl font-semibold tracking-tight text-primary font-h2">Clipper<span class="text-primary-container">.</span></div></div>
+<div class="hidden md:flex items-center gap-10"><a class="nav-link text-on-surface-variant font-medium text-[15px] transition-colors hover:text-primary" href="#">Dashboard</a><a class="nav-link active text-primary font-semibold text-[15px]" href="#">My Clips</a><a class="nav-link text-on-surface-variant font-medium text-[15px] transition-colors hover:text-primary" href="#">Pricing</a><a class="nav-link text-on-surface-variant font-medium text-[15px] transition-colors hover:text-primary" href="#">API</a></div>
+<div class="flex items-center gap-6"><button class="text-on-surface hover:text-primary font-semibold text-[15px] transition-colors">Sign In</button><button class="bg-primary text-on-primary px-6 py-2.5 rounded-full text-[15px] font-semibold hover:bg-opacity-90 transition-all shadow-sm hover:shadow-lg hover:scale-[1.02] active:scale-95">New Clip</button></div>
+</div>
+</nav>
+<!-- Main Canvas -->
+<main class="pt-32 pb-32 min-h-screen flex flex-col items-center">
+<div class="max-w-[1280px] w-full px-8 flex flex-col items-center">
+<!-- Forge Rendering Container -->
+<div class="w-full max-w-3xl bg-white rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.03)] border border-surface-container-high p-12 md:p-16 flex flex-col items-center relative overflow-hidden">
+<!-- Abstract Background Ornament -->
+<div class="absolute -top-32 -right-32 w-80 h-80 bg-secondary-container/20 rounded-full blur-[100px]"></div>
+<div class="absolute -bottom-32 -left-32 w-80 h-80 bg-secondary-container/15 rounded-full blur-[100px]"></div>
+<!-- Progress Ring Section -->
+<div class="relative w-56 h-56 flex items-center justify-center mb-10">
+<!-- Progress Background -->
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container" cx="112" cy="112" fill="transparent" r="96" stroke="currentColor" stroke-width="6"></circle>
+<!-- Active Progress (Sage Green) -->
+<circle class="text-secondary transition-all duration-1000 ease-out" cx="112" cy="112" fill="transparent" r="96" stroke="currentColor" stroke-dasharray="603" stroke-dashoffset="211" stroke-linecap="round" stroke-width="6"></circle>
+</svg>
+<!-- Inner Content -->
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-h1 text-5xl font-black text-primary">65%</span>
+<span class="font-label-caps text-[10px] text-on-secondary-container tracking-[0.2em] mt-3 uppercase font-bold">Processing</span>
+</div>
+</div>
+<!-- Status Text -->
+<div class="text-center mb-12">
+<h1 class="font-h2 text-3xl text-primary mb-3">Forging your clips...</h1>
+<p class="font-body-md text-on-surface-variant max-w-md mx-auto">Our AI engine is analyzing your footage to extract the most engaging viral moments.</p>
+</div>
+<!-- Status Steps -->
+<div class="w-full space-y-4 max-w-xl">
+<!-- Step 1: Completed -->
+<div class="flex items-center gap-5 p-4 rounded-xl bg-secondary-container/10 border border-secondary-container/30">
+<div class="w-9 h-9 rounded-full bg-secondary flex items-center justify-center text-white shadow-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="check">check</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md font-semibold text-primary text-sm">Downloading video</p>
+<p class="text-xs text-on-surface-variant">Source: YouTube (4k Resolution)</p>
+</div>
+<span class="text-[10px] font-bold text-secondary uppercase tracking-wider bg-secondary/10 px-2.5 py-1 rounded-full">Done</span>
+</div>
+<!-- Step 2: Active -->
+<div class="flex items-center gap-5 p-4 rounded-xl bg-white border border-secondary-container shadow-sm ring-4 ring-secondary/5">
+<div class="w-9 h-9 rounded-full bg-secondary-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px] animate-pulse" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md font-semibold text-primary text-sm">Extracting viral moments</p>
+<p class="text-xs text-on-surface-variant">Analyzing sentiment and high-energy segments...</p>
+</div>
+<div class="flex gap-1 pr-2">
+<div class="w-1 h-1 bg-secondary rounded-full animate-bounce"></div>
+<div class="w-1 h-1 bg-secondary rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+<div class="w-1 h-1 bg-secondary rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+</div>
+</div>
+<!-- Step 3: Pending -->
+<div class="flex items-center gap-5 p-4 rounded-xl bg-surface border border-surface-container-high opacity-50">
+<div class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="crop_portrait">crop_portrait</span>
+</div>
+<div class="flex-1">
+<p class="font-body-md font-medium text-on-surface-variant text-sm">Centering for vertical view</p>
+<p class="text-xs text-on-surface-variant/70">Subject tracking for 9:16 aspect ratio</p>
+</div>
+<span class="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-wider px-2">Waiting</span>
+</div>
+</div>
+<!-- Subtle Preview Shadow Card -->
+<div class="mt-12 w-full max-w-xl h-44 rounded-xl bg-black overflow-hidden relative group">
+<img class="w-full h-full object-cover opacity-50 grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="Professional editing suite" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDe1ntlctwNPQ5umyPbQG6K3d3V0uYk77KxPBuqX852d0xiK0NlrhHb8pAhFIP0I9TIBn3exVXsoH8QEV1IX-yaoO9XiVTJkdNaJNfmLL2Fi8j3jdDQNTAuh-kI581hNiqYpESKQ3D-ZrsT40fgzuEzEqIcOLZjT9oT-2kMgj9EFyUscBbywbcdHBcoonQ35lkj4dtTq3WZK7ZxDoBSBqUv-SsLk1K0Dsr_ezwkMqbbVOD5ADj4N-CUtBLHieG8U2NhqP6BHaXOUFy9"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end p-6">
+<div class="flex items-center gap-3">
+<div class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"></div>
+<p class="text-white text-xs font-semibold tracking-wide uppercase">Live AI Rendering Preview</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Contextual Info (Post-canvas) -->
+<div class="mt-12 flex flex-col md:flex-row gap-8 w-full max-w-3xl">
+<div class="flex-1 p-8 rounded-xl bg-white shadow-sm border border-surface-container">
+<div class="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center mb-5">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="bolt">bolt</span>
+</div>
+<h3 class="font-h3 text-lg text-primary mb-2">High Priority Rendering</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Your clips are being processed on our Tier-1 GPU cluster for maximum speed and accuracy.</p>
+</div>
+<div class="flex-1 p-8 rounded-xl bg-white shadow-sm border border-surface-container">
+<div class="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center mb-5">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="notifications_active">notifications_active</span>
+</div>
+<h3 class="font-h3 text-lg text-primary mb-2">Email Notification</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Feel free to navigate away. We'll send you an email as soon as your clips are ready for review.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-16 border-t border-surface-container-high bg-white">
+<div class="max-w-[1280px] mx-auto flex flex-col md:flex-row justify-between items-center px-8 gap-10">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 bg-primary rounded-md flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[14px]" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div class="text-lg font-bold text-primary tracking-tight">Clipper</div>
+</div>
+<div class="text-on-surface-variant/60 font-body-md text-sm">© 2024 Clipper AI. Professional Video Intelligence.</div>
+<div class="flex gap-8">
+<a class="text-on-surface-variant/60 hover:text-primary transition-colors text-xs font-medium uppercase tracking-wider" href="#">Privacy</a>
+<a class="text-on-surface-variant/60 hover:text-primary transition-colors text-xs font-medium uppercase tracking-wider" href="#">Terms</a>
+<a class="text-on-surface-variant/60 hover:text-primary transition-colors text-xs font-medium uppercase tracking-wider" href="#">Status</a>
+<a class="text-on-surface-variant/60 hover:text-primary transition-colors text-xs font-medium uppercase tracking-wider" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>

@@ -86,7 +86,6 @@ def render_vertical_blur_clip(
         playback_speed=playback_speed,
         silence_threshold_db=silence_threshold_db,
         min_silence_sec=min_silence_sec,
-        title_text=top_caption or ((clip.hook or clip.title) if add_hook_title else ""),
         style=style,
         crop_position=crop_position,
     )
@@ -174,53 +173,44 @@ def build_filter_complex(
     playback_speed: float,
     silence_threshold_db: int,
     min_silence_sec: float,
-    title_text: str = "",
     style: str = "blur",
     crop_position: str = "center",
 ) -> str:
     setpts_factor = 1 / playback_speed
-    drawtext = f",{build_drawtext_filter(title_text)}" if title_text else ""
-    if style == "black-box":
-        video_base = build_black_box_video_filter(setpts_factor, drawtext, crop_position)
-    elif style == "full":
-        video_base = build_full_video_filter(setpts_factor, drawtext)
+    # We ignore style 'blur' and force black background as requested
+    if style == "full":
+        video_base = build_full_video_filter(setpts_factor)
     else:
-        video_base = build_blur_video_filter(setpts_factor, drawtext)
+        video_base = build_black_box_video_filter(setpts_factor)
+    
     if not has_audio:
         return video_base
 
-    audio = f";[0:a]{atempo_chain(playback_speed)}[aout]"
+    audio = f"; [0:a]{atempo_chain(playback_speed)} [aout]"
     return video_base + audio
 
 
-def build_blur_video_filter(setpts_factor: float, drawtext: str) -> str:
+def build_blur_video_filter(setpts_factor: float) -> str:
+    # Replaced blur with black background
+    return build_black_box_video_filter(setpts_factor)
+
+
+def build_black_box_video_filter(setpts_factor: float) -> str:
     return (
-        f"[0:v]setpts={setpts_factor:.6f}*PTS,"
-        "scale=1080:1920:force_original_aspect_ratio=increase,"
-        "crop=1080:1920,gblur=sigma=28,setsar=1[bg];"
-        f"[0:v]setpts={setpts_factor:.6f}*PTS,"
-        "scale=1080:1920:force_original_aspect_ratio=decrease,"
-        "setsar=1[fg];"
-        f"[bg][fg]overlay=(W-w)/2:(H-h)/2{drawtext}[vout]"
+        "color=c=black:s=1080x1920:r=30 [bg]; "
+        f"[0:v]setpts={setpts_factor:.6f}*PTS, "
+        "scale=1080:1920:force_original_aspect_ratio=decrease, "
+        "setsar=1 [fg]; "
+        f"[bg][fg]overlay=(W-w)/2:(H-h)/2:shortest=1 [vout]"
     )
 
 
-def build_black_box_video_filter(setpts_factor: float, drawtext: str, crop_position: str) -> str:
+def build_full_video_filter(setpts_factor: float) -> str:
     return (
-        "color=c=black:s=1080x1920:r=30[bg];"
-        f"[0:v]setpts={setpts_factor:.6f}*PTS,"
-        "scale=1080:1920:force_original_aspect_ratio=decrease,"
-        "setsar=1[fg];"
-        f"[bg][fg]overlay=(W-w)/2:(H-h)/2:shortest=1{drawtext}[vout]"
-    )
-
-
-def build_full_video_filter(setpts_factor: float, drawtext: str) -> str:
-    return (
-        f"[0:v]setpts={setpts_factor:.6f}*PTS,"
-        "scale=1080:1920:force_original_aspect_ratio=increase,"
-        "crop=1080:1920,"
-        f"setsar=1{drawtext}[vout]"
+        f"[0:v]setpts={setpts_factor:.6f}*PTS, "
+        "scale=1080:1920:force_original_aspect_ratio=increase, "
+        "crop=1080:1920, "
+        f"setsar=1 [vout]"
     )
 
 
@@ -312,49 +302,3 @@ def parse_silencedetect(log_text: str) -> list[tuple[float, float]]:
         if end_match and starts:
             silences.append((starts.pop(0), float(end_match.group(1))))
     return silences
-
-
-def build_drawtext_filter(title_text: str) -> str:
-    text = wrap_title(title_text)
-    escaped = escape_drawtext(text)
-    return (
-        "drawbox=x=54:y=74:w=972:h=232:color=black@0.86:t=fill,"
-        "drawbox=x=54:y=74:w=972:h=232:color=white@0.16:t=3,"
-        "drawtext=fontcolor=white:fontsize=58:line_spacing=12:"
-        "x=(w-text_w)/2:y=116:box=0:"
-        f"text='{escaped}'"
-    )
-
-
-def wrap_title(text: str, max_chars: int = 24, max_lines: int = 2) -> str:
-    words = clean_overlay_text(text).split()
-    lines: list[str] = []
-    current = ""
-    for word in words:
-        candidate = f"{current} {word}".strip()
-        if len(candidate) <= max_chars:
-            current = candidate
-        else:
-            if current:
-                lines.append(current)
-            current = word
-        if len(lines) == max_lines:
-            break
-    if current and len(lines) < max_lines:
-        lines.append(current)
-    return "\n".join(lines[:max_lines]) or "Viral Moment"
-
-
-def clean_overlay_text(text: str) -> str:
-    text = re.sub(r"[^A-Za-z0-9 ]+", "", text)
-    return re.sub(r"\s+", " ", text).strip()[:90]
-
-
-def escape_drawtext(text: str) -> str:
-    return (
-        text.replace("\\", "\\\\")
-        .replace(":", "\\:")
-        .replace("'", "\\'")
-        .replace("%", "\\%")
-        .replace("\n", "\\n")
-    )

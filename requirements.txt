@@ -8,3 +8,4 @@ youtube-transcript-api==0.6.3
 yt-dlp==2026.3.17
 pytest==8.3.4
 httpx==0.28.1
+firebase-admin==7.4.0

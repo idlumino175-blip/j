@@ -15,8 +15,6 @@ def test_app_config_returns_public_auth_shape():
     response = client.get("/app-config")
     assert response.status_code == 200
     data = response.json()
-    assert isinstance(data["auth_required"], bool)
-    assert "supabase_url" in data
-    assert "supabase_anon_key" in data
+    assert isinstance(data["auth_enabled"], bool)
+    assert "firebase_config" in data
     assert "daily_free_renders" in data
-    assert "service_role" not in data

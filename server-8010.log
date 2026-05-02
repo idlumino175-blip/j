@@ -1,0 +1,5 @@
+INFO:     127.0.0.1:50362 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50367 - "GET /?verify=auth2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50367 - "GET /static/app.js?v=auth2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50367 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50367 - "GET /app-config HTTP/1.1" 200 OK
