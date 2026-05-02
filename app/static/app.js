@@ -40,6 +40,8 @@
         signInBtn: select("#signInBtn"),
         signUpBtn: select("#signUpBtn"),
         authMessage: select("#authMessage"),
+        authEmail: select("#authEmail"),
+        authPassword: select("#authPassword"),
         generateSelectedBtn: select("#generateSelected"),
         cancelForgeBtn: select("#cancelForgeBtn"),
         maxClips: select("#maxClips"),
@@ -50,7 +52,8 @@
     let lastRequest = null;
     let activeJobTimer = null;
     let currentJobId = null;
-    let firebaseUser = null;
+    let supabaseClient = null;
+    let supabaseUser = null;
     let youtubeApiKey = null;
     let fluidProgressVal = 0;
     let fluidProgressInterval = null;
@@ -151,16 +154,17 @@
 
     // 5. CORE SYSTEM INIT
     document.addEventListener("DOMContentLoaded", () => {
-        fetch("/app-config")
+        fetch("/app-config?t=" + new Date().getTime())
             .then(r => r.json())
             .then(config => {
                 youtubeApiKey = config.youtube_api_key;
                 if (!config.auth_enabled) return;
                 
-                if (firebase.apps.length === 0) firebase.initializeApp(config.firebase_config);
+                supabaseClient = supabase.createClient(config.supabase_url, config.supabase_anon_key);
                 
-                firebase.auth().onAuthStateChanged(user => {
-                    firebaseUser = user;
+                supabaseClient.auth.onAuthStateChange((event, session) => {
+                    const user = session?.user || null;
+                    supabaseUser = user;
                     if (user) {
                         els.authOverlay?.classList.add("hidden");
                         els.authBtnNav?.classList.add("hidden");
@@ -172,6 +176,14 @@
                         els.authBtnNav?.classList.remove("hidden");
                     }
                 });
+                
+                // Check initial session
+                supabaseClient.auth.getSession().then(({ data: { session } }) => {
+                    if (session?.user) {
+                        supabaseUser = session.user;
+                        if (els.userEmailDisplay) { els.userEmailDisplay.textContent = session.user.email; els.userEmailDisplay.classList.remove("hidden"); }
+                    }
+                });
             })
             .catch(err => console.error("System init failed", err));
     });
@@ -179,9 +191,11 @@
     // 6. ACTION HANDLERS
     const postJson = async (url, payload) => {
         const headers = { "Content-Type": "application/json" };
-        if (firebaseUser) {
-            const token = await firebaseUser.getIdToken();
-            headers.Authorization = `Bearer ${token}`;
+        if (supabaseUser) {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session?.access_token) {
+                headers.Authorization = `Bearer ${session.access_token}`;
+            }
         }
         const resp = await fetch(url, { method: "POST", headers, body: JSON.stringify(payload) });
         const data = await resp.json();
@@ -322,7 +336,10 @@
             const email = els.authEmail?.value;
             const pass = els.authPassword?.value;
             if (els.authMessage) els.authMessage.textContent = "VERIFYING...";
-            try { await firebase.auth().signInWithEmailAndPassword(email, pass); }
+            try { 
+                const { error } = await supabaseClient.auth.signInWithPassword({ email, password: pass });
+                if (error) throw error;
+            }
             catch (e) { if (els.authMessage) els.authMessage.textContent = e.message; }
         };
     }
@@ -331,11 +348,15 @@
             const email = els.authEmail?.value;
             const pass = els.authPassword?.value;
             if (els.authMessage) els.authMessage.textContent = "CREATING...";
-            try { await firebase.auth().createUserWithEmailAndPassword(email, pass); }
+            try { 
+                const { error } = await supabaseClient.auth.signUp({ email, password: pass });
+                if (error) throw error;
+                if (els.authMessage) els.authMessage.textContent = "Check your email for confirmation.";
+            }
             catch (e) { if (els.authMessage) els.authMessage.textContent = e.message; }
         };
     }
-    if (els.signOutBtn) els.signOutBtn.onclick = () => firebase.auth().signOut();
+    if (els.signOutBtn) els.signOutBtn.onclick = () => supabaseClient.auth.signOut();
 
     // 9. WINDOW ERROR CATCHER (FOR VERCEL)
     window.onerror = function(msg, url, line) {

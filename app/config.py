@@ -19,13 +19,7 @@ class Settings(BaseSettings):
     daily_free_renders: int = 3
     auth_enabled: bool = True
     
-    firebase_api_key: str = ""
-    firebase_auth_domain: str = ""
-    firebase_project_id: str = ""
-    firebase_storage_bucket: str = ""
-    firebase_messaging_sender_id: str = ""
-    firebase_app_id: str = ""
-    firebase_measurement_id: str = ""
+    
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
