@@ -1,4 +1,4 @@
-// Pure Design Rebuild: Opus Previews & Stitch AI Fidelity
+// Pure Design Rebuild: High-End Auth & Vercel Fix
 const analyzeForm = document.querySelector("#analyzeForm");
 const youtubeUrlInput = document.querySelector("#youtubeUrl");
 const landingPhase = document.querySelector("#landingPhase");
@@ -14,7 +14,6 @@ const navAPI = document.querySelector("#navAPI");
 
 const historyGrid = document.querySelector("#historyGrid");
 const apiGemini = document.querySelector("#apiGemini");
-const apiYoutube = document.querySelector("#apiYoutube");
 const saveApiBtn = document.querySelector("#saveApiBtn");
 const apiMessage = document.querySelector("#apiMessage");
 
@@ -28,6 +27,7 @@ const renderOutput = document.querySelector("#renderOutput");
 const forgeProgressCircle = document.querySelector("#forgeProgressCircle");
 const forgePercentText = document.querySelector("#forgePercentText");
 const forgeStatusLabel = document.querySelector("#forgeStatusLabel");
+const forgeActionLabel = document.querySelector("#forgeActionLabel");
 const forgeSteps = document.querySelector("#forgeSteps");
 const momentsCountText = document.querySelector("#momentsCountText");
 
@@ -38,6 +38,7 @@ const authOverlay = document.querySelector("#authOverlay");
 const closeAuth = document.querySelector("#closeAuth");
 const signInBtn = document.querySelector("#signInBtn");
 const signUpBtn = document.querySelector("#signUpBtn");
+const authMessage = document.querySelector("#authMessage");
 
 const generateSelectedBtn = document.querySelector("#generateSelected");
 const cancelForgeBtn = document.querySelector("#cancelForgeBtn");
@@ -70,36 +71,6 @@ saveApiBtn?.addEventListener("click", () => {
     setTimeout(() => apiMessage.classList.add("opacity-0"), 3000);
 });
 
-async function fetchHistory() {
-    historyGrid.innerHTML = `
-        <div class="col-span-full p-20 text-center">
-            <div class="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Retrieving forged history...</p>
-        </div>
-    `;
-    try {
-        const resp = await fetch("/renders");
-        const clips = await resp.json();
-        if (clips.length === 0) {
-            historyGrid.innerHTML = `<p class="col-span-full text-center py-20 text-slate-400 font-bold">No assets found in your forge history.</p>`;
-            return;
-        }
-        historyGrid.innerHTML = clips.map(c => `
-            <div class="bg-white rounded-2xl p-6 border border-surface-container shadow-sm hover:shadow-xl transition-all group">
-                <div class="relative aspect-[9/16] bg-black rounded-xl overflow-hidden mb-6 border border-slate-100">
-                    <video src="/files?path=${encodeURIComponent(c.path)}" class="w-full h-full object-cover"></video>
-                </div>
-                <h4 class="font-bold text-primary truncate mb-4 text-sm">${c.name}</h4>
-                <a href="/files?path=${encodeURIComponent(c.path)}" download class="w-full py-3 bg-secondary-container text-on-secondary-container rounded-full font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 hover:bg-[#bdcabe] transition-all">
-                    <span class="material-symbols-outlined text-sm">download</span> Download
-                </a>
-            </div>
-        `).join("");
-    } catch (e) {
-        historyGrid.innerHTML = `<p class="col-span-full text-center py-20 text-red-400">Failed to load history.</p>`;
-    }
-}
-
 cancelForgeBtn?.addEventListener("click", async () => {
     if (!currentJobId) return;
     if (confirm("Are you sure you want to cancel? This will stop the AI process immediately.")) {
@@ -112,74 +83,16 @@ cancelForgeBtn?.addEventListener("click", async () => {
     }
 });
 
-function setSpeed(val) {
-    document.querySelector("#speed").value = val;
-    document.querySelectorAll(".speed-pill").forEach(btn => {
-        const btnVal = parseFloat(btn.textContent);
-        if (btnVal === val) {
-            btn.classList.add("bg-primary", "text-white", "border-primary");
-            btn.classList.remove("border-transparent", "hover:bg-white");
-        } else {
-            btn.classList.remove("bg-primary", "text-white", "border-primary");
-            btn.classList.add("border-transparent", "hover:bg-white");
-        }
-    });
-}
-
-// Live YouTube Preview
-youtubeUrlInput?.addEventListener("input", async (e) => {
-    const url = e.target.value.trim();
-    const videoId = extractVideoId(url);
-    
-    if (videoId) {
-        urlPreview.classList.remove("hidden");
-        if (!youtubeApiKey) {
-            previewTitle.textContent = "Waiting for API configuration...";
-            return;
-        }
-        
-        previewTitle.textContent = "Fetching video details...";
-        try {
-            const resp = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${youtubeApiKey}`);
-            const data = await resp.json();
-            
-            if (data.error) {
-                previewTitle.textContent = "API Key Error: Check YouTube Data API quotas.";
-                previewChannel.textContent = "Error Code: " + data.error.code;
-                console.error("YouTube API Error:", data.error);
-                return;
-            }
-
-            if (data.items && data.items.length > 0) {
-                const snip = data.items[0].snippet;
-                previewTitle.textContent = snip.title;
-                previewThumb.src = snip.thumbnails.medium.url;
-                previewChannel.textContent = snip.channelTitle;
-            } else {
-                previewTitle.textContent = "Video not found (Private or Invalid ID)";
-                previewChannel.textContent = "Source Unavailable";
-            }
-        } catch (err) { 
-            previewTitle.textContent = "Network Error: Unable to reach YouTube";
-            console.error(err); 
-        }
-    } else {
-        urlPreview.classList.add("hidden");
-    }
-});
-
-function extractVideoId(url) {
-    const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    const match = url.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : null;
-}
-
-// Firebase
+// Firebase Auth
 document.addEventListener("DOMContentLoaded", () => {
   fetch("/app-config").then(r => r.json()).then(config => {
     youtubeApiKey = config.youtube_api_key;
     if (!config.auth_enabled) return;
-    firebase.initializeApp(config.firebase_config);
+    
+    if (firebase.apps.length === 0) {
+        firebase.initializeApp(config.firebase_config);
+    }
+    
     firebase.auth().onAuthStateChanged(user => {
       firebaseUser = user;
       if (user) {
@@ -199,18 +112,71 @@ document.addEventListener("DOMContentLoaded", () => {
 signInBtn?.addEventListener("click", async () => {
   const email = document.querySelector("#authEmail").value;
   const pass = document.querySelector("#authPassword").value;
-  try { await firebase.auth().signInWithEmailAndPassword(email, pass); } 
-  catch (e) { document.querySelector("#authMessage").textContent = e.message; }
+  authMessage.textContent = "Verifying Identity...";
+  try { 
+      await firebase.auth().signInWithEmailAndPassword(email, pass); 
+  } catch (e) { 
+      let msg = e.message;
+      if (location.hostname !== "localhost" && location.hostname !== "127.0.0.1") {
+          msg += " (Check Firebase 'Authorized Domains' in console)";
+      }
+      authMessage.textContent = msg; 
+  }
 });
 
 signUpBtn?.addEventListener("click", async () => {
   const email = document.querySelector("#authEmail").value;
   const pass = document.querySelector("#authPassword").value;
-  try { await firebase.auth().createUserWithEmailAndPassword(email, pass); } 
-  catch (e) { document.querySelector("#authMessage").textContent = e.message; }
+  authMessage.textContent = "Creating Account...";
+  try { 
+      await firebase.auth().createUserWithEmailAndPassword(email, pass); 
+  } catch (e) { authMessage.textContent = e.message; }
 });
 
 signOutBtn?.addEventListener("click", () => firebase.auth().signOut());
+
+// Live YouTube Preview
+youtubeUrlInput?.addEventListener("input", async (e) => {
+    const url = e.target.value.trim();
+    const videoId = extractVideoId(url);
+    if (videoId) {
+        urlPreview.classList.remove("hidden");
+        if (!youtubeApiKey) { previewTitle.textContent = "Waiting for configuration..."; return; }
+        previewTitle.textContent = "Fetching video details...";
+        try {
+            const resp = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${youtubeApiKey}`);
+            const data = await resp.json();
+            if (data.items && data.items.length > 0) {
+                const snip = data.items[0].snippet;
+                previewTitle.textContent = snip.title;
+                previewThumb.src = snip.thumbnails.medium.url;
+                previewChannel.textContent = snip.channelTitle;
+            } else if (data.error) {
+                previewTitle.textContent = "YouTube API Error: " + data.error.message;
+            }
+        } catch (err) { previewTitle.textContent = "Network Error"; }
+    } else { urlPreview.classList.add("hidden"); }
+});
+
+function extractVideoId(url) {
+    const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+}
+
+function setSpeed(val) {
+    document.querySelector("#speed").value = val;
+    document.querySelectorAll(".speed-pill").forEach(btn => {
+        const btnVal = parseFloat(btn.textContent);
+        if (btnVal === val) {
+            btn.classList.add("bg-primary", "text-white", "border-primary");
+            btn.classList.remove("border-transparent", "hover:bg-surface");
+        } else {
+            btn.classList.remove("bg-primary", "text-white", "border-primary");
+            btn.classList.add("border-transparent", "hover:bg-surface");
+        }
+    });
+}
 
 // Submission
 analyzeForm?.addEventListener("submit", async (e) => {
@@ -247,7 +213,6 @@ generateSelectedBtn?.addEventListener("click", async () => {
             start_rank: checked[0], 
             max_clips: checked.length,
             gemini_api_key: localStorage.getItem("gemini_key") || null,
-            youtube_api_key: localStorage.getItem("youtube_key") || null,
         });
         currentJobId = job.id;
         pollRenderJob(job.id);
@@ -272,16 +237,10 @@ function pollRenderJob(jobId) {
     const job = await fetch(`/render/jobs/${jobId}`).then(r => r.json());
     if (job.status === "cancelled") { clearInterval(activeJobTimer); showPhase("landing"); return; }
     
-    // Update Live Logs
     if (job.logs && job.logs.length > 0) {
         const logContainer = document.querySelector("#forgeLogs");
         if (logContainer) {
-            logContainer.innerHTML = job.logs.map(l => `
-                <div class="flex gap-3">
-                    <span class="text-slate-300 font-bold">[${l.time}]</span>
-                    <span class="text-slate-600">${l.msg}</span>
-                </div>
-            `).join("");
+            logContainer.innerHTML = job.logs.map(l => `<div class="flex gap-3"><span class="text-slate-500 font-bold">[${l.time}]</span><span class="text-secondary">${l.msg}</span></div>`).join("");
             logContainer.scrollTop = logContainer.scrollHeight;
         }
     }
@@ -310,8 +269,6 @@ function pollRenderJob(jobId) {
 
 function showPhase(name) {
     [landingPhase, forgePhase, selectionPhase, resultPhase, myClipsPhase, apiPhase].forEach(p => p.classList.add("hidden"));
-    
-    // Update nav active state
     [navDashboard, navMyClips, navAPI].forEach(link => {
         if (!link) return;
         link.classList.remove("text-primary", "font-semibold");
@@ -356,17 +313,13 @@ function startFluidProgress() {
     }, 400);
 }
 
-function stopFluidProgress() {
-    if (fluidProgressInterval) clearInterval(fluidProgressInterval);
-    fluidProgressInterval = null;
-}
+function stopFluidProgress() { if (fluidProgressInterval) clearInterval(fluidProgressInterval); fluidProgressInterval = null; }
 
 function updateForge(percent, label) {
     const offset = 754 - (754 * percent / 100);
     if (forgeProgressCircle) forgeProgressCircle.style.strokeDashoffset = offset;
     if (forgePercentText) forgePercentText.textContent = `${percent}%`;
-    const actionLabel = document.querySelector("#forgeActionLabel");
-    if (actionLabel && label) actionLabel.textContent = label;
+    if (forgeActionLabel && label) forgeActionLabel.textContent = label;
 }
 
 function addForgeStep(text, status) {
@@ -395,11 +348,17 @@ function addForgeStep(text, status) {
     if (forgeSteps) forgeSteps.appendChild(div);
 }
 
-function jobPercent(job) {
-  if (job.status === "completed") return 100;
-  if (!job.total) return 10;
-  return Math.floor((job.current / job.total) * 100);
+async function fetchHistory() {
+    historyGrid.innerHTML = `<div class="col-span-full p-20 text-center"><div class="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div><p class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Retrieving history...</p></div>`;
+    try {
+        const resp = await fetch("/renders");
+        const clips = await resp.json();
+        if (clips.length === 0) { historyGrid.innerHTML = `<p class="col-span-full text-center py-20 text-slate-400 font-bold">No history found.</p>`; return; }
+        historyGrid.innerHTML = clips.map(c => `<div class="bg-white rounded-2xl p-6 border border-surface-container shadow-sm hover:shadow-xl transition-all group"><div class="relative aspect-[9/16] bg-black rounded-xl overflow-hidden mb-6 border border-slate-100"><video src="/files?path=${encodeURIComponent(c.path)}" class="w-full h-full object-cover"></video></div><h4 class="font-bold text-primary truncate mb-4 text-sm">${c.name}</h4><a href="/files?path=${encodeURIComponent(c.path)}" download class="w-full py-3 bg-secondary-container text-on-secondary-container rounded-full font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 hover:bg-[#bdcabe] transition-all"><span class="material-symbols-outlined text-sm">download</span> Download</a></div>`).join("");
+    } catch (e) { historyGrid.innerHTML = `<p class="col-span-full text-center py-20 text-red-400">Error loading history.</p>`; }
 }
+
+function jobPercent(job) { if (job.status === "completed") return 100; if (!job.total) return 10; return Math.floor((job.current / job.total) * 100); }
 
 function showSelection(clips) {
     showPhase("selection");
@@ -419,22 +378,6 @@ function showSelection(clips) {
             <div class="mt-auto flex items-center justify-between"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">${Math.floor(clip.end_sec - clip.start_sec)} Sec</span><button onclick="renderSingle(${clip.rank})" class="text-[10px] font-black uppercase tracking-widest text-secondary hover:text-primary underline">Forge Moment</button></div>
         </div>
     `).join("");
-}
-
-async function renderSingle(rank) {
-    showPhase("forge");
-    updateForge(5, "Forging specific moment...");
-    try {
-        const job = await postJson("/render", { 
-            ...lastRequest, 
-            start_rank: rank, 
-            max_clips: 1, 
-            target_rank: rank,
-            gemini_api_key: localStorage.getItem("gemini_key") || null,
-        });
-        currentJobId = job.id;
-        pollRenderJob(job.id);
-    } catch (e) { alert(e.message); showPhase("selection"); }
 }
 
 function showFinalResults(files) {
@@ -475,6 +418,4 @@ function showFinalResults(files) {
     `).join("<hr class='border-slate-100 my-32 opacity-0' />");
 }
 
-function escapeHtml(v) {
-  return String(v || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
-}
+function escapeHtml(v) { return String(v || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;"); }
